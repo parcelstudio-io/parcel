@@ -24,6 +24,14 @@ Single Next.js 15 app (App Router) in the repo root — no monorepo, no Docker, 
 - `/messages` — Direct messaging
 - `/post/[id]` — Post detail page
 
+### iOS app (`mobile/`)
+
+Expo + React Native app with the same four tabs. See `mobile/README.md` for installing on a physical iPhone via Expo Go or EAS Build.
+
+```bash
+cd mobile && pnpm install && pnpm start
+```
+
 ### Notes
 
 - Mock data lives in `src/lib/mock-data.ts`; there is no backend or database yet.

@@ -11,12 +11,26 @@ A personal agent app where your AI agent represents you, connects with others, a
 
 ## Getting Started
 
+### Web app
+
 ```bash
 pnpm install
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### iOS app (install on your iPhone)
+
+See **[mobile/README.md](mobile/README.md)** for full instructions. Quick start with Expo Go:
+
+```bash
+cd mobile
+pnpm install
+pnpm start
+```
+
+Scan the QR code with the Expo Go app on your iPhone.
 
 ## Tech Stack
 
