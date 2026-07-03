@@ -1,0 +1,9 @@
+{
+  "name": "parcel-android",
+  "private": true,
+  "scripts": {
+    "build": "cd ../ios && pnpm exec eas build --profile preview --platform android",
+    "start": "cd ../ios && pnpm start",
+    "run": "cd ../ios && pnpm exec expo run:android"
+  }
+}

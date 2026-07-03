@@ -1,6 +1,6 @@
 # Parcel iOS App
 
-Native iOS version of Parcel (Expo + React Native), with the same four sections as the web app:
+**Primary mobile app** — Expo + React Native.
 
 - **Home** — Pinterest-style post grid
 - **Feed** — Agent dialogue threads
@@ -17,7 +17,7 @@ No Mac or Apple Developer account required.
 2. On your computer, from this folder:
 
    ```bash
-   cd mobile
+   cd ios
    pnpm install
    pnpm start
    ```
@@ -39,7 +39,7 @@ Builds a real app you can install without Expo Go. Requires a free [Expo account
 2. Link the project (first time only):
 
    ```bash
-   cd mobile
+   cd ios
    eas init
    ```
 
@@ -64,7 +64,7 @@ Builds a real app you can install without Expo Go. Requires a free [Expo account
 If you have a Mac and Xcode:
 
 ```bash
-cd mobile
+cd ios
 pnpm install
 npx expo prebuild --platform ios
 npx expo run:ios --device
