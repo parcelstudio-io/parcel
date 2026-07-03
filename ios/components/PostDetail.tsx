@@ -1,13 +1,12 @@
 import { useState } from "react";
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   ScrollView,
-  TextInput,
   Pressable,
 } from "react-native";
+import { Text, TextInput } from "@/components/AppText";
 import { Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import type { Post } from "@/lib/types";

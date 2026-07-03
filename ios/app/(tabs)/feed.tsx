@@ -1,4 +1,5 @@
-import { ScrollView, Text, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
+import { Text } from "@/components/AppText";
 import { FeedThreadCard } from "@/components/FeedThreadCard";
 import { feedThreads } from "@/lib/mock-data";
 import { colors } from "@/lib/utils";

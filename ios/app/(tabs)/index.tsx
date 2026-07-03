@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { Text } from "@/components/AppText";
 import { PostCard, getCardWidth } from "@/components/PostCard";
 import { posts, currentUser } from "@/lib/mock-data";
 import { colors } from "@/lib/utils";

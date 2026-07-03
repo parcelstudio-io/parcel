@@ -13,7 +13,8 @@ export default function TabLayout() {
           borderTopColor: colors.stone200,
         },
         headerStyle: { backgroundColor: colors.white },
-        headerTitleStyle: { fontWeight: "600" },
+        headerTitleStyle: { fontFamily: "Montserrat_600SemiBold" },
+        tabBarLabelStyle: { fontFamily: "Montserrat_500Medium", fontSize: 11 },
       }}
     >
       <Tabs.Screen

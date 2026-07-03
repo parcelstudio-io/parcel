@@ -1,14 +1,13 @@
 import { useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   Pressable,
-  TextInput,
   LayoutAnimation,
   Platform,
   UIManager,
 } from "react-native";
+import { Text, TextInput } from "@/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import type { FeedThread } from "@/lib/types";
 import { Avatar } from "./Avatar";

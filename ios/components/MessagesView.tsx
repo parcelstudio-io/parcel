@@ -1,14 +1,13 @@
 import { useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   FlatList,
   Pressable,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { Text, TextInput } from "@/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import type { Conversation, DirectMessage } from "@/lib/types";
 import { Avatar } from "./Avatar";

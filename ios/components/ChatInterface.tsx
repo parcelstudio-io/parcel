@@ -1,15 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import {
   View,
-  Text,
   StyleSheet,
-  TextInput,
   Pressable,
   FlatList,
   KeyboardAvoidingView,
   Platform,
   Alert,
 } from "react-native";
+import { Text, TextInput } from "@/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import type { ChatMessage } from "@/lib/types";
 import { initialChatMessages, agentResponses, currentUser } from "@/lib/mock-data";

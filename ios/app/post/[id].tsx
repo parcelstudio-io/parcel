@@ -1,7 +1,8 @@
 import { useLocalSearchParams } from "expo-router";
 import { PostDetail } from "@/components/PostDetail";
 import { posts } from "@/lib/mock-data";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Text } from "@/components/AppText";
 import { colors } from "@/lib/utils";
 
 export default function PostScreen() {

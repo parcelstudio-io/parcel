@@ -1,4 +1,5 @@
-import { View, Text, Image, StyleSheet, Pressable, Dimensions } from "react-native";
+import { View, Image, StyleSheet, Pressable, Dimensions } from "react-native";
+import { Text } from "@/components/AppText";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import type { Post } from "@/lib/types";
