@@ -1,0 +1,23 @@
+services:
+  csm-service:
+    build: ./csm-service
+    ports:
+      - "8001:8001"
+    environment:
+      - CSM_MOCK=true
+      - WHISPER_MODEL=base
+      - CSM_MODEL=sesame/csm-1b
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN:-}
+    volumes:
+      - ./csm-service:/app
+
+  # Uncomment to run Ollama locally alongside the app
+  # ollama:
+  #   image: ollama/ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama_data:/root/.ollama
+
+# volumes:
+#   ollama_data:
