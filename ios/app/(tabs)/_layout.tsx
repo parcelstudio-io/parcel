@@ -1,21 +1,20 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/lib/ThemeProvider";
+import { FloatingTabBar } from "@/components/FloatingTabBar";
+import { getFloatingTabBarStyle } from "@/lib/tabBar";
 
 export default function TabLayout() {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
 
   return (
     <Tabs
+      tabBar={(props) => <FloatingTabBar {...props} />}
       screenOptions={{
+        tabBarShowLabel: false,
         tabBarActiveTintColor: colors.text,
         tabBarInactiveTintColor: colors.textSecondary,
-        tabBarStyle: {
-          backgroundColor: colors.tabBarBg,
-          borderTopColor: colors.borderLight,
-          borderTopWidth: 0.5,
-          paddingTop: 4,
-        },
+        tabBarStyle: getFloatingTabBarStyle(isDark),
         headerStyle: {
           backgroundColor: colors.headerBg,
           shadowOpacity: 0,
@@ -27,21 +26,16 @@ export default function TabLayout() {
           fontSize: 17,
           color: colors.text,
         },
-        tabBarLabelStyle: {
-          fontFamily: "Montserrat_500Medium",
-          fontSize: 10,
-          marginTop: -2,
-        },
         sceneStyle: { backgroundColor: colors.bg },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Explore",
+          title: "Profile",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search-outline" size={size} color={color} />
+            <Ionicons name="person-outline" size={size} color={color} />
           ),
         }}
       />

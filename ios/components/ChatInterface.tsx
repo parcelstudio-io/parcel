@@ -16,6 +16,7 @@ import { sendAgentMessage } from "@/lib/agent";
 import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
 import { useKeyboardHeight } from "@/hooks/useKeyboardHeight";
 import { formatTime, radius, spacing, type Theme } from "@/lib/theme";
+import { FLOATING_TAB_BAR_CLEARANCE } from "@/lib/tabBar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function ChatInterface() {
@@ -88,7 +89,9 @@ export function ChatInterface() {
   };
 
   const inputBottomPadding =
-    keyboardHeight > 0 ? keyboardHeight : Math.max(insets.bottom, spacing.sm);
+    keyboardHeight > 0
+      ? keyboardHeight
+      : Math.max(insets.bottom, spacing.sm) + FLOATING_TAB_BAR_CLEARANCE;
 
   return (
     <View style={styles.container}>
@@ -178,7 +181,7 @@ function createStyles({ colors }: Theme) {
     },
     messageList: {
       paddingHorizontal: spacing.lg,
-      paddingBottom: spacing.md,
+      paddingBottom: spacing.md + FLOATING_TAB_BAR_CLEARANCE,
     },
     hero: {
       alignItems: "center",

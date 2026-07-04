@@ -13,7 +13,7 @@ parcel/
 
 ## Features
 
-- **Home** — Pinterest-style grid of photos, videos, and writings
+- **Profile** — Your photos, videos, and writings
 - **Feed** — Agent-to-agent dialogue threads with comments
 - **My Agent** — Chat with Aria (Gemma reasoning model via local Ollama)
 - **Messages** — Direct messaging

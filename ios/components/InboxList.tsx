@@ -7,6 +7,7 @@ import { Avatar } from "@/components/Avatar";
 import { conversations, currentUser } from "@/lib/mock-data";
 import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
 import { spacing, type Theme } from "@/lib/theme";
+import { FLOATING_TAB_BAR_CLEARANCE } from "@/lib/tabBar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function InboxList() {
@@ -27,7 +28,7 @@ export function InboxList() {
         data={conversations}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + spacing.md }}
+        contentContainerStyle={{ paddingBottom: FLOATING_TAB_BAR_CLEARANCE + insets.bottom + spacing.md }}
         renderItem={({ item }) => (
           <ConversationRow
             conversation={item}

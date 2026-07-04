@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Rss, MessageCircle, MessagesSquare, Bot } from "lucide-react";
+import { User, Rss, Bot, MessagesSquare, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { currentUser } from "@/lib/mock-data";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home },
+  { href: "/", label: "Profile", icon: User },
   { href: "/feed", label: "Feed", icon: Rss },
   { href: "/chat", label: "My Agent", icon: Bot },
   { href: "/messages", label: "Messages", icon: MessagesSquare },
@@ -18,21 +18,24 @@ export function Navigation() {
 
   return (
     <>
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-app-border bg-app-surface/95 backdrop-blur-md md:hidden">
-        <div className="flex items-center justify-around px-2 py-2">
-          {navItems.map(({ href, label, icon: Icon }) => {
+      <nav
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden"
+        aria-label="Main"
+      >
+        <div className="pointer-events-auto flex w-full max-w-[420px] items-center justify-around rounded-[32px] border border-black/5 bg-white/75 px-2 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:border-white/10 dark:bg-[rgba(20,20,20,0.72)]">
+          {navItems.map(({ href, icon: Icon }) => {
             const active = pathname === href || (href !== "/" && pathname.startsWith(href));
             return (
               <Link
                 key={href}
                 href={href}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 rounded-lg px-3 py-2 text-xs transition-colors",
-                  active ? "text-brand-600" : "text-app-text-secondary hover:text-app-text"
+                  "flex flex-1 items-center justify-center rounded-2xl py-2.5 transition-opacity active:opacity-60",
+                  active ? "text-app-text" : "text-app-text-secondary"
                 )}
+                aria-label={href}
               >
-                <Icon className="h-5 w-5" />
-                <span>{label}</span>
+                <Icon className="h-[26px] w-[26px]" strokeWidth={active ? 2.25 : 1.75} />
               </Link>
             );
           })}

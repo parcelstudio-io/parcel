@@ -4,6 +4,7 @@ import { FeedThreadCard } from "@/components/FeedThreadCard";
 import { feedThreads } from "@/lib/mock-data";
 import { useTheme } from "@/lib/ThemeProvider";
 import { spacing } from "@/lib/theme";
+import { FLOATING_TAB_BAR_CLEARANCE } from "@/lib/tabBar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function FeedScreen() {
@@ -13,7 +14,10 @@ export default function FeedScreen() {
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.bg }]}
-      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.md }]}
+      contentContainerStyle={[
+        styles.content,
+        { paddingTop: insets.top + spacing.md, paddingBottom: FLOATING_TAB_BAR_CLEARANCE + insets.bottom },
+      ]}
       showsVerticalScrollIndicator={false}
     >
       <Text style={[styles.title, { color: colors.text }]}>Your feed</Text>
@@ -32,7 +36,7 @@ export default function FeedScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xl },
+  content: { paddingHorizontal: spacing.lg },
   title: {
     fontSize: 28,
     fontWeight: "600",
