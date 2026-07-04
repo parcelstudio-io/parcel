@@ -11,7 +11,8 @@ import { Text, TextInput } from "@/components/AppText";
 import type { FeedThread } from "@/lib/types";
 import { Avatar } from "./Avatar";
 import { currentUser } from "@/lib/mock-data";
-import { colors, radius, shadow, spacing } from "@/lib/utils";
+import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
+import { radius, spacing, type Theme } from "@/lib/theme";
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -20,6 +21,11 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
 type Props = { thread: FeedThread };
 
 export function FeedThreadCard({ thread }: Props) {
+  const { colors } = useTheme();
+  const { styles, shadow } = useThemedStyles((theme) => ({
+    styles: createStyles(theme),
+    shadow: theme.shadow,
+  }));
   const [expanded, setExpanded] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(thread.comments);
@@ -101,102 +107,101 @@ export function FeedThreadCard({ thread }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.bg,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
-  },
-  topRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.md,
-    marginBottom: spacing.md,
-  },
-  topMeta: { flex: 1 },
-  hostLine: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.text,
-  },
-  time: {
-    fontSize: 13,
-    color: colors.textSecondary,
-    marginTop: 2,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.text,
-    letterSpacing: -0.3,
-    marginBottom: spacing.sm,
-  },
-  summary: {
-    fontSize: 15,
-    lineHeight: 24,
-    color: colors.textSecondary,
-  },
-  showMore: {
-    marginTop: spacing.md,
-    alignSelf: "flex-start",
-  },
-  showMoreText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: colors.text,
-    textDecorationLine: "underline",
-  },
-  dialogue: {
-    marginTop: spacing.md,
-    paddingTop: spacing.md,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.border,
-    gap: spacing.md,
-  },
-  dialogueLine: {
-    gap: 4,
-  },
-  dialogueAgent: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: colors.textSecondary,
-  },
-  dialogueContent: {
-    fontSize: 15,
-    lineHeight: 22,
-    color: colors.text,
-  },
-  commentsBlock: {
-    marginTop: spacing.md,
-    paddingTop: spacing.md,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.border,
-    gap: spacing.sm,
-  },
-  commentRow: {
-    gap: 2,
-  },
-  commentAuthor: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.text,
-  },
-  commentText: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: colors.textSecondary,
-  },
-  commentInputRow: {
-    marginTop: spacing.md,
-  },
-  commentInput: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 12,
-    fontSize: 15,
-    backgroundColor: colors.bgMuted,
-  },
-});
+function createStyles({ colors }: Theme) {
+  return StyleSheet.create({
+    card: {
+      backgroundColor: colors.bg,
+      borderRadius: radius.lg,
+      padding: spacing.lg,
+      marginBottom: spacing.lg,
+    },
+    topRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.md,
+      marginBottom: spacing.md,
+    },
+    topMeta: { flex: 1 },
+    hostLine: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    time: {
+      fontSize: 13,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    title: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.text,
+      letterSpacing: -0.3,
+      marginBottom: spacing.sm,
+    },
+    summary: {
+      fontSize: 15,
+      lineHeight: 24,
+      color: colors.textSecondary,
+    },
+    showMore: {
+      marginTop: spacing.md,
+      alignSelf: "flex-start",
+    },
+    showMoreText: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: colors.text,
+      textDecorationLine: "underline",
+    },
+    dialogue: {
+      marginTop: spacing.md,
+      paddingTop: spacing.md,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: colors.border,
+      gap: spacing.md,
+    },
+    dialogueLine: { gap: 4 },
+    dialogueAgent: {
+      fontSize: 13,
+      fontWeight: "600",
+      color: colors.textSecondary,
+    },
+    dialogueContent: {
+      fontSize: 15,
+      lineHeight: 22,
+      color: colors.text,
+    },
+    commentsBlock: {
+      marginTop: spacing.md,
+      paddingTop: spacing.md,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: colors.border,
+      gap: spacing.sm,
+    },
+    commentRow: { gap: 2 },
+    commentAuthor: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    commentText: {
+      fontSize: 14,
+      lineHeight: 20,
+      color: colors.textSecondary,
+    },
+    commentInputRow: {
+      marginTop: spacing.md,
+    },
+    commentInput: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radius.md,
+      paddingHorizontal: spacing.md,
+      paddingVertical: 12,
+      fontSize: 15,
+      backgroundColor: colors.bgMuted,
+      color: colors.text,
+    },
+  });
+}

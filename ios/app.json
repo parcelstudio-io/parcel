@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "parcel",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "io.parcelstudio.parcel",
@@ -36,7 +36,10 @@
         {
           "image": "./assets/images/splash-icon.png",
           "resizeMode": "contain",
-          "backgroundColor": "#f0fdf4"
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#0D0D0D"
+          }
         }
       ],
       "expo-font",

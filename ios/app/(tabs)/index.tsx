@@ -2,11 +2,13 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { Text } from "@/components/AppText";
 import { PostCard, getCardWidth } from "@/components/PostCard";
 import { posts, currentUser } from "@/lib/mock-data";
-import { colors, spacing } from "@/lib/utils";
+import { useTheme } from "@/lib/ThemeProvider";
+import { spacing } from "@/lib/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
   const cardWidth = getCardWidth();
   const leftColumn: typeof posts = [];
   const rightColumn: typeof posts = [];
@@ -18,12 +20,16 @@ export default function HomeScreen() {
 
   return (
     <ScrollView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.bg }]}
       contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.md }]}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.greeting}>Hello, {currentUser.name.split(" ")[0]}</Text>
-      <Text style={styles.subtitle}>Your moments & writings</Text>
+      <Text style={[styles.greeting, { color: colors.text }]}>
+        Hello, {currentUser.name.split(" ")[0]}
+      </Text>
+      <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+        Your moments & writings
+      </Text>
 
       <View style={styles.grid}>
         <View style={[styles.column, { width: cardWidth }]}>
@@ -42,17 +48,15 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bg },
+  container: { flex: 1 },
   content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xl },
   greeting: {
     fontSize: 28,
     fontWeight: "600",
-    color: colors.text,
     letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 15,
-    color: colors.textSecondary,
     marginTop: spacing.xs,
     marginBottom: spacing.lg,
   },

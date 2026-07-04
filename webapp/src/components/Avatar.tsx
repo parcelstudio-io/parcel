@@ -18,7 +18,7 @@ export function Avatar({ user, size = "md", className }: AvatarProps) {
     <img
       src={user.avatar}
       alt={user.name}
-      className={cn("rounded-full bg-stone-200 object-cover", sizes[size], className)}
+      className={cn("rounded-full bg-app-surface-muted object-cover", sizes[size], className)}
     />
   );
 }

@@ -42,20 +42,20 @@ export function PostDetail({ post }: PostDetailProps) {
     <div className="animate-fade-in">
       <Link
         href="/"
-        className="mb-6 inline-flex items-center gap-2 text-sm text-stone-500 hover:text-stone-700"
+        className="mb-6 inline-flex items-center gap-2 text-sm text-app-text-secondary hover:text-app-text"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to home
       </Link>
 
-      <article className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
+      <article className="overflow-hidden rounded-2xl border border-app-border bg-app-surface shadow-sm">
         {post.type === "writing" ? (
-          <div className="bg-gradient-to-br from-stone-50 to-white px-8 py-10">
-            <PenLine className="mb-4 h-6 w-6 text-stone-400" />
+          <div className="bg-gradient-to-br from-app-surface-muted to-app-surface px-8 py-10">
+            <PenLine className="mb-4 h-6 w-6 text-app-text-tertiary" />
             <h1 className="mb-6 text-2xl font-bold">{post.title}</h1>
-            <div className="prose prose-stone max-w-none">
+            <div className="prose prose-stone max-w-none dark:prose-invert">
               {post.writingContent?.split("\n\n").map((paragraph, i) => (
-                <p key={i} className="mb-4 leading-relaxed text-stone-700">
+                <p key={i} className="mb-4 leading-relaxed text-app-text">
                   {paragraph}
                 </p>
               ))}
@@ -83,25 +83,25 @@ export function PostDetail({ post }: PostDetailProps) {
             <Avatar user={post.author} />
             <div>
               <p className="font-medium">{post.author.name}</p>
-              <p className="text-xs text-stone-500">{post.timestamp}</p>
+              <p className="text-xs text-app-text-secondary">{post.timestamp}</p>
             </div>
           </div>
 
           <h1 className="mb-2 text-xl font-bold">{post.title}</h1>
-          <p className="mb-6 leading-relaxed text-stone-600">{post.caption}</p>
+          <p className="mb-6 leading-relaxed text-app-text-secondary">{post.caption}</p>
 
-          <div className="mb-6 flex items-center gap-4 border-y border-stone-100 py-3">
+          <div className="mb-6 flex items-center gap-4 border-y border-app-border-light py-3">
             <button
               onClick={handleLike}
               className={cn(
                 "flex items-center gap-2 text-sm font-medium transition-colors",
-                liked ? "text-red-500" : "text-stone-500 hover:text-red-500"
+                liked ? "text-red-500" : "text-app-text-secondary hover:text-red-500"
               )}
             >
               <Heart className={cn("h-5 w-5", liked && "fill-current")} />
               {likeCount}
             </button>
-            <span className="flex items-center gap-2 text-sm text-stone-500">
+            <span className="flex items-center gap-2 text-sm text-app-text-secondary">
               <MessageCircle className="h-5 w-5" />
               {comments.length} comments
             </span>
@@ -111,12 +111,12 @@ export function PostDetail({ post }: PostDetailProps) {
             {comments.map((c) => (
               <div key={c.id} className="flex gap-3">
                 <Avatar user={c.author} size="sm" />
-                <div className="flex-1 rounded-xl bg-stone-50 px-3 py-2">
+                <div className="flex-1 rounded-xl bg-app-surface-muted px-3 py-2">
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm font-medium">{c.author.name}</span>
-                    <span className="text-xs text-stone-400">{c.timestamp}</span>
+                    <span className="text-xs text-app-text-tertiary">{c.timestamp}</span>
                   </div>
-                  <p className="text-sm text-stone-600">{c.content}</p>
+                  <p className="text-sm text-app-text-secondary">{c.content}</p>
                 </div>
               </div>
             ))}
@@ -129,7 +129,7 @@ export function PostDetail({ post }: PostDetailProps) {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Add a comment..."
-              className="flex-1 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+              className="flex-1 rounded-full border border-app-border bg-app-surface px-4 py-2 text-sm text-app-text outline-none focus:border-brand-400 focus:ring-2 focus:ring-app-accent-soft"
             />
           </form>
         </div>

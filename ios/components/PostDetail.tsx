@@ -12,11 +12,14 @@ import { Ionicons } from "@expo/vector-icons";
 import type { Post } from "@/lib/types";
 import { Avatar } from "@/components/Avatar";
 import { currentUser } from "@/lib/mock-data";
-import { colors } from "@/lib/utils";
+import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
+import { type Theme } from "@/lib/theme";
 
 type Props = { post: Post };
 
 export function PostDetail({ post }: Props) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(post.likes);
   const [comment, setComment] = useState("");
@@ -52,7 +55,7 @@ export function PostDetail({ post }: Props) {
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
         {post.type === "writing" ? (
           <View style={styles.writingBlock}>
-            <Ionicons name="create-outline" size={24} color={colors.stone400} />
+            <Ionicons name="create-outline" size={24} color={colors.textTertiary} />
             <Text style={styles.writingTitle}>{post.title}</Text>
             {post.writingContent?.split("\n\n").map((p, i) => (
               <Text key={i} style={styles.writingPara}>
@@ -66,7 +69,7 @@ export function PostDetail({ post }: Props) {
             {post.type === "video" && (
               <View style={styles.playOverlay}>
                 <View style={styles.playBtn}>
-                  <Ionicons name="play" size={28} color={colors.stone900} />
+                  <Ionicons name="play" size={28} color={colors.text} />
                 </View>
               </View>
             )}
@@ -90,12 +93,12 @@ export function PostDetail({ post }: Props) {
               <Ionicons
                 name={liked ? "heart" : "heart-outline"}
                 size={22}
-                color={liked ? colors.red500 : colors.stone500}
+                color={liked ? colors.accent : colors.textSecondary}
               />
               <Text style={styles.actionText}>{likeCount}</Text>
             </Pressable>
             <View style={styles.actionBtn}>
-              <Ionicons name="chatbubble-outline" size={22} color={colors.stone500} />
+              <Ionicons name="chatbubble-outline" size={22} color={colors.textSecondary} />
               <Text style={styles.actionText}>{comments.length}</Text>
             </View>
           </View>
@@ -120,7 +123,7 @@ export function PostDetail({ post }: Props) {
               value={comment}
               onChangeText={setComment}
               placeholder="Add a comment..."
-              placeholderTextColor={colors.stone400}
+              placeholderTextColor={colors.textTertiary}
               onSubmitEditing={submitComment}
               returnKeyType="send"
             />
@@ -131,72 +134,92 @@ export function PostDetail({ post }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: colors.stone50 },
-  content: { paddingBottom: 32 },
-  heroImage: { width: "100%", height: 360, resizeMode: "cover" },
-  playOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 360,
-    backgroundColor: "rgba(0,0,0,0.25)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  playBtn: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: "rgba(255,255,255,0.9)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  writingBlock: {
-    backgroundColor: colors.white,
-    padding: 24,
-  },
-  writingTitle: { fontSize: 24, fontWeight: "700", marginTop: 12, marginBottom: 16 },
-  writingPara: { fontSize: 16, lineHeight: 26, color: colors.stone700, marginBottom: 16 },
-  body: {
-    backgroundColor: colors.white,
-    padding: 20,
-  },
-  authorRow: { flexDirection: "row", gap: 12, marginBottom: 16 },
-  authorName: { fontSize: 15, fontWeight: "600" },
-  postTime: { fontSize: 12, color: colors.stone500 },
-  title: { fontSize: 20, fontWeight: "700", marginBottom: 8 },
-  caption: { fontSize: 15, lineHeight: 22, color: colors.stone600, marginBottom: 16 },
-  actions: {
-    flexDirection: "row",
-    gap: 24,
-    paddingVertical: 12,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: colors.stone100,
-    marginBottom: 16,
-  },
-  actionBtn: { flexDirection: "row", alignItems: "center", gap: 6 },
-  actionText: { fontSize: 14, color: colors.stone500, fontWeight: "500" },
-  commentRow: { flexDirection: "row", gap: 12, marginBottom: 12 },
-  commentBubble: {
-    flex: 1,
-    backgroundColor: colors.stone50,
-    borderRadius: 12,
-    padding: 10,
-  },
-  commentAuthor: { fontSize: 14, fontWeight: "600" },
-  commentTime: { fontSize: 12, fontWeight: "400", color: colors.stone400 },
-  commentText: { fontSize: 14, color: colors.stone600, marginTop: 2 },
-  commentInputRow: { flexDirection: "row", gap: 12, alignItems: "center", marginTop: 8 },
-  commentInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.stone200,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    fontSize: 14,
-  },
-});
+function createStyles({ colors }: Theme) {
+  return StyleSheet.create({
+    scroll: { flex: 1, backgroundColor: colors.bgMuted },
+    content: { paddingBottom: 32 },
+    heroImage: { width: "100%", height: 360, resizeMode: "cover" },
+    playOverlay: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 360,
+      backgroundColor: "rgba(0,0,0,0.25)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    playBtn: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      backgroundColor: "rgba(255,255,255,0.9)",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    writingBlock: {
+      backgroundColor: colors.bg,
+      padding: 24,
+    },
+    writingTitle: {
+      fontSize: 24,
+      fontWeight: "700",
+      marginTop: 12,
+      marginBottom: 16,
+      color: colors.text,
+    },
+    writingPara: {
+      fontSize: 16,
+      lineHeight: 26,
+      color: colors.textSecondary,
+      marginBottom: 16,
+    },
+    body: {
+      backgroundColor: colors.bg,
+      padding: 20,
+    },
+    authorRow: { flexDirection: "row", gap: 12, marginBottom: 16 },
+    authorName: { fontSize: 15, fontWeight: "600", color: colors.text },
+    postTime: { fontSize: 12, color: colors.textSecondary },
+    title: { fontSize: 20, fontWeight: "700", marginBottom: 8, color: colors.text },
+    caption: {
+      fontSize: 15,
+      lineHeight: 22,
+      color: colors.textSecondary,
+      marginBottom: 16,
+    },
+    actions: {
+      flexDirection: "row",
+      gap: 24,
+      paddingVertical: 12,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: colors.borderLight,
+      marginBottom: 16,
+    },
+    actionBtn: { flexDirection: "row", alignItems: "center", gap: 6 },
+    actionText: { fontSize: 14, color: colors.textSecondary, fontWeight: "500" },
+    commentRow: { flexDirection: "row", gap: 12, marginBottom: 12 },
+    commentBubble: {
+      flex: 1,
+      backgroundColor: colors.bgMuted,
+      borderRadius: 12,
+      padding: 10,
+    },
+    commentAuthor: { fontSize: 14, fontWeight: "600", color: colors.text },
+    commentTime: { fontSize: 12, fontWeight: "400", color: colors.textTertiary },
+    commentText: { fontSize: 14, color: colors.textSecondary, marginTop: 2 },
+    commentInputRow: { flexDirection: "row", gap: 12, alignItems: "center", marginTop: 8 },
+    commentInput: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 20,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      fontSize: 14,
+      backgroundColor: colors.bg,
+      color: colors.text,
+    },
+  });
+}

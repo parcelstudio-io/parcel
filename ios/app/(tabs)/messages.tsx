@@ -1,15 +1,17 @@
 import { StyleSheet, View } from "react-native";
 import { MessagesView } from "@/components/MessagesView";
-import { colors } from "@/lib/utils";
+import { useTheme } from "@/lib/ThemeProvider";
 
 export default function MessagesScreen() {
+  const { colors } = useTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.bg }]}>
       <MessagesView />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bg },
+  container: { flex: 1 },
 });

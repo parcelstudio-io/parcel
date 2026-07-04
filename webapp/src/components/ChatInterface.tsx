@@ -85,14 +85,14 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-2rem)] flex-col rounded-2xl border border-stone-200 bg-white shadow-sm md:h-[calc(100vh-3rem)]">
-      <div className="flex items-center gap-3 border-b border-stone-100 px-6 py-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100">
+    <div className="flex h-[calc(100vh-2rem)] flex-col rounded-2xl border border-app-border bg-app-surface shadow-sm md:h-[calc(100vh-3rem)]">
+      <div className="flex items-center gap-3 border-b border-app-border-light px-6 py-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-app-accent-soft">
           <Bot className="h-5 w-5 text-brand-600" />
         </div>
         <div>
           <h2 className="font-semibold">Aria</h2>
-          <p className="text-xs text-stone-500">Your personal agent</p>
+          <p className="text-xs text-app-text-secondary">Your personal agent</p>
         </div>
       </div>
 
@@ -106,7 +106,7 @@ export function ChatInterface() {
             )}
           >
             {msg.role === "agent" ? (
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-app-accent-soft">
                 <Bot className="h-4 w-4 text-brand-600" />
               </div>
             ) : (
@@ -117,14 +117,14 @@ export function ChatInterface() {
                 "max-w-[75%] rounded-2xl px-4 py-3",
                 msg.role === "user"
                   ? "bg-brand-600 text-white"
-                  : "bg-stone-100 text-stone-800"
+                  : "bg-app-agent-bubble text-app-text"
               )}
             >
               <p className="text-sm leading-relaxed">{msg.content}</p>
               <p
                 className={cn(
                   "mt-1 text-xs",
-                  msg.role === "user" ? "text-brand-200" : "text-stone-400"
+                  msg.role === "user" ? "text-brand-200" : "text-app-text-tertiary"
                 )}
               >
                 {msg.timestamp}
@@ -135,7 +135,7 @@ export function ChatInterface() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t border-stone-100 px-4 py-4">
+      <div className="border-t border-app-border-light px-4 py-4">
         {isListening && (
           <div className="mb-3 flex items-center justify-center gap-2 text-sm text-brand-600">
             <span className="relative flex h-3 w-3">
@@ -160,8 +160,8 @@ export function ChatInterface() {
               className={cn(
                 "flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors",
                 isListening
-                  ? "bg-red-100 text-red-600"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                  ? "bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400"
+                  : "bg-app-surface-muted text-app-text-secondary hover:bg-app-border"
               )}
               aria-label={isListening ? "Stop listening" : "Start voice input"}
             >
@@ -173,7 +173,7 @@ export function ChatInterface() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Tell Aria about yourself..."
-            className="flex-1 rounded-full border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+            className="flex-1 rounded-full border border-app-border bg-app-input-bg px-4 py-2.5 text-sm text-app-text outline-none focus:border-brand-400 focus:ring-2 focus:ring-app-accent-soft"
           />
           <button
             type="submit"
@@ -186,7 +186,7 @@ export function ChatInterface() {
         </form>
 
         {!speechSupported && (
-          <p className="mt-2 text-center text-xs text-stone-400">
+          <p className="mt-2 text-center text-xs text-app-text-tertiary">
             Voice input requires a browser with Web Speech API support (Chrome, Edge, Safari).
           </p>
         )}

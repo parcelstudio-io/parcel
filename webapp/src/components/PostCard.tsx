@@ -13,16 +13,16 @@ export function PostCard({ post, className }: PostCardProps) {
     <Link
       href={`/post/${post.id}`}
       className={cn(
-        "group relative block break-inside-avoid overflow-hidden rounded-2xl bg-white shadow-sm transition-all hover:shadow-lg",
+        "group relative block break-inside-avoid overflow-hidden rounded-2xl bg-app-surface shadow-sm transition-all hover:shadow-lg",
         className
       )}
     >
       {post.type === "writing" ? (
-        <div className="flex min-h-[200px] flex-col justify-between bg-gradient-to-br from-stone-100 to-stone-50 p-5">
-          <PenLine className="h-5 w-5 text-stone-400" />
+        <div className="flex min-h-[200px] flex-col justify-between bg-gradient-to-br from-app-surface-muted to-app-surface-subtle p-5">
+          <PenLine className="h-5 w-5 text-app-text-tertiary" />
           <div>
             <h3 className="mb-2 font-semibold leading-snug">{post.title}</h3>
-            <p className="line-clamp-4 text-sm leading-relaxed text-stone-600">
+            <p className="line-clamp-4 text-sm leading-relaxed text-app-text-secondary">
               {post.writingContent}
             </p>
           </div>
@@ -47,7 +47,7 @@ export function PostCard({ post, className }: PostCardProps) {
         </div>
       )}
 
-      <div className="flex items-center gap-4 border-t border-stone-100 px-4 py-2.5 text-xs text-stone-500">
+      <div className="flex items-center gap-4 border-t border-app-border-light px-4 py-2.5 text-xs text-app-text-secondary">
         <span className="flex items-center gap-1">
           <Heart className="h-3.5 w-3.5" />
           {post.likes}

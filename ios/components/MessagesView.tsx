@@ -12,11 +12,14 @@ import { Ionicons } from "@expo/vector-icons";
 import type { DirectMessage } from "@/lib/types";
 import { Avatar } from "./Avatar";
 import { conversations, directMessages, currentUser } from "@/lib/mock-data";
-import { colors, formatTime, radius, spacing } from "@/lib/utils";
+import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
+import { formatTime, radius, spacing, type Theme } from "@/lib/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function MessagesView() {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
   const [selectedId, setSelectedId] = useState<string | null>("conv1");
   const [messages, setMessages] = useState<Record<string, DirectMessage[]>>(directMessages);
   const [input, setInput] = useState("");
@@ -112,7 +115,7 @@ export function MessagesView() {
                 disabled={!input.trim()}
                 style={[styles.sendBtn, !input.trim() && styles.sendBtnOff]}
               >
-                <Ionicons name="arrow-up" size={18} color={colors.white} />
+                <Ionicons name="arrow-up" size={18} color={colors.buttonPrimaryIcon} />
               </Pressable>
             </View>
           </>
@@ -126,98 +129,105 @@ export function MessagesView() {
   );
 }
 
-const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
-  pageTitle: {
-    fontSize: 28,
-    fontWeight: "600",
-    color: colors.text,
-    letterSpacing: -0.5,
-    paddingHorizontal: spacing.lg,
-    marginBottom: spacing.md,
-  },
-  chipRow: {
-    paddingHorizontal: spacing.lg,
-    gap: spacing.sm,
-    paddingBottom: spacing.md,
-  },
-  chip: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: colors.border,
-    maxWidth: 160,
-  },
-  chipActive: {
-    borderColor: colors.text,
-    backgroundColor: colors.bgMuted,
-  },
-  chipName: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.textSecondary,
-    flexShrink: 1,
-  },
-  chipNameActive: {
-    color: colors.text,
-    fontWeight: "600",
-  },
-  chatArea: { flex: 1, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
-  chatHeader: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  chatName: { fontSize: 17, fontWeight: "600", color: colors.text },
-  chatHandle: { fontSize: 13, color: colors.textSecondary, marginTop: 2 },
-  messageList: { paddingHorizontal: spacing.lg, paddingBottom: spacing.md, flexGrow: 1 },
-  msgRow: { marginBottom: spacing.md, alignItems: "flex-start" },
-  msgRowMe: { alignItems: "flex-end" },
-  bubbleMe: {
-    maxWidth: "85%",
-    backgroundColor: colors.chatUserBubble,
-    borderRadius: radius.xl,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  textMe: { fontSize: 16, lineHeight: 22, color: colors.text },
-  textThem: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: colors.text,
-    maxWidth: "92%",
-  },
-  inputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.borderLight,
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 12,
-    fontSize: 16,
-    backgroundColor: colors.bg,
-  },
-  sendBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: colors.text,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sendBtnOff: { backgroundColor: colors.border },
-  empty: { flex: 1, justifyContent: "center", alignItems: "center" },
-  emptyText: { color: colors.textSecondary },
-});
+function createStyles({ colors }: Theme) {
+  return StyleSheet.create({
+    root: { flex: 1, backgroundColor: colors.bg },
+    pageTitle: {
+      fontSize: 28,
+      fontWeight: "600",
+      color: colors.text,
+      letterSpacing: -0.5,
+      paddingHorizontal: spacing.lg,
+      marginBottom: spacing.md,
+    },
+    chipRow: {
+      paddingHorizontal: spacing.lg,
+      gap: spacing.sm,
+      paddingBottom: spacing.md,
+    },
+    chip: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.sm,
+      paddingVertical: spacing.sm,
+      paddingHorizontal: spacing.md,
+      borderRadius: radius.pill,
+      borderWidth: 1,
+      borderColor: colors.border,
+      maxWidth: 160,
+    },
+    chipActive: {
+      borderColor: colors.text,
+      backgroundColor: colors.bgMuted,
+    },
+    chipName: {
+      fontSize: 14,
+      fontWeight: "500",
+      color: colors.textSecondary,
+      flexShrink: 1,
+    },
+    chipNameActive: {
+      color: colors.text,
+      fontWeight: "600",
+    },
+    chatArea: {
+      flex: 1,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: colors.border,
+    },
+    chatHeader: {
+      paddingHorizontal: spacing.lg,
+      paddingVertical: spacing.md,
+    },
+    chatName: { fontSize: 17, fontWeight: "600", color: colors.text },
+    chatHandle: { fontSize: 13, color: colors.textSecondary, marginTop: 2 },
+    messageList: { paddingHorizontal: spacing.lg, paddingBottom: spacing.md, flexGrow: 1 },
+    msgRow: { marginBottom: spacing.md, alignItems: "flex-start" },
+    msgRowMe: { alignItems: "flex-end" },
+    bubbleMe: {
+      maxWidth: "85%",
+      backgroundColor: colors.chatUserBubble,
+      borderRadius: radius.xl,
+      paddingHorizontal: 16,
+      paddingVertical: 10,
+    },
+    textMe: { fontSize: 16, lineHeight: 22, color: colors.text },
+    textThem: {
+      fontSize: 16,
+      lineHeight: 24,
+      color: colors.text,
+      maxWidth: "92%",
+    },
+    inputRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.sm,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: colors.borderLight,
+    },
+    input: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: radius.pill,
+      paddingHorizontal: spacing.md,
+      paddingVertical: 12,
+      fontSize: 16,
+      backgroundColor: colors.bg,
+      color: colors.text,
+    },
+    sendBtn: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: colors.buttonPrimary,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    sendBtnOff: { backgroundColor: colors.buttonDisabled },
+    empty: { flex: 1, justifyContent: "center", alignItems: "center" },
+    emptyText: { color: colors.textSecondary },
+  });
+}

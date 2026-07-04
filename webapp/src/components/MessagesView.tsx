@@ -34,14 +34,14 @@ export function MessagesView() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-2rem)] overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm md:h-[calc(100vh-3rem)]">
+    <div className="flex h-[calc(100vh-2rem)] overflow-hidden rounded-2xl border border-app-border bg-app-surface shadow-sm md:h-[calc(100vh-3rem)]">
       <div
         className={cn(
-          "w-full border-r border-stone-100 md:w-80 md:block",
+          "w-full border-r border-app-border-light md:w-80 md:block",
           selectedId ? "hidden md:block" : "block"
         )}
       >
-        <div className="border-b border-stone-100 px-5 py-4">
+        <div className="border-b border-app-border-light px-5 py-4">
           <h2 className="text-lg font-semibold">Messages</h2>
         </div>
         <ul>
@@ -63,7 +63,7 @@ export function MessagesView() {
             !selectedId ? "hidden md:flex" : "flex"
           )}
         >
-          <div className="flex items-center gap-3 border-b border-stone-100 px-5 py-4">
+          <div className="flex items-center gap-3 border-b border-app-border-light px-5 py-4">
             <button
               onClick={() => setSelectedId(null)}
               className="text-sm text-brand-600 md:hidden"
@@ -73,7 +73,7 @@ export function MessagesView() {
             <Avatar user={selectedConv.participant} size="sm" />
             <div>
               <p className="font-medium">{selectedConv.participant.name}</p>
-              <p className="text-xs text-stone-500">{selectedConv.participant.handle}</p>
+              <p className="text-xs text-app-text-secondary">{selectedConv.participant.handle}</p>
             </div>
           </div>
 
@@ -93,14 +93,14 @@ export function MessagesView() {
                       "max-w-[75%] rounded-2xl px-4 py-2.5",
                       isMe
                         ? "bg-brand-600 text-white"
-                        : "bg-stone-100 text-stone-800"
+                        : "bg-app-agent-bubble text-app-text"
                     )}
                   >
                     <p className="text-sm">{msg.content}</p>
                     <p
                       className={cn(
                         "mt-1 text-xs",
-                        isMe ? "text-brand-200" : "text-stone-400"
+                        isMe ? "text-brand-200" : "text-app-text-tertiary"
                       )}
                     >
                       {msg.timestamp}
@@ -111,13 +111,13 @@ export function MessagesView() {
             })}
           </div>
 
-          <form onSubmit={sendMessage} className="flex gap-2 border-t border-stone-100 px-4 py-3">
+          <form onSubmit={sendMessage} className="flex gap-2 border-t border-app-border-light px-4 py-3">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 rounded-full border border-stone-200 bg-stone-50 px-4 py-2.5 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+              className="flex-1 rounded-full border border-app-border bg-app-input-bg px-4 py-2.5 text-sm text-app-text outline-none focus:border-brand-400 focus:ring-2 focus:ring-app-accent-soft"
             />
             <button
               type="submit"
@@ -129,7 +129,7 @@ export function MessagesView() {
           </form>
         </div>
       ) : (
-        <div className="hidden flex-1 items-center justify-center text-stone-400 md:flex">
+        <div className="hidden flex-1 items-center justify-center text-app-text-tertiary md:flex">
           Select a conversation to start messaging
         </div>
       )}
@@ -151,19 +151,19 @@ function ConversationItem({
       <button
         onClick={onClick}
         className={cn(
-          "flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-stone-50",
-          active && "bg-brand-50"
+          "flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-app-surface-muted",
+          active && "bg-app-nav-active"
         )}
       >
         <Avatar user={conversation.participant} />
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between">
             <p className="truncate font-medium">{conversation.participant.name}</p>
-            <span className="shrink-0 text-xs text-stone-400">
+            <span className="shrink-0 text-xs text-app-text-tertiary">
               {conversation.lastMessageTime}
             </span>
           </div>
-          <p className="truncate text-sm text-stone-500">{conversation.lastMessage}</p>
+          <p className="truncate text-sm text-app-text-secondary">{conversation.lastMessage}</p>
         </div>
         {conversation.unread > 0 && (
           <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs text-white">

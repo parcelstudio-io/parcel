@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} ${montserrat.className} bg-stone-50 text-stone-900 antialiased`}
+        className={`${montserrat.variable} ${montserrat.className} bg-app-bg text-app-text antialiased`}
       >
         <div className="flex min-h-screen">
           <Navigation />
