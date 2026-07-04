@@ -21,6 +21,9 @@ export type ThemeColors = {
   tabBarBg: string;
   headerBg: string;
   shadowColor: string;
+  dmSent: string;
+  dmReceived: string;
+  dmUnread: string;
   // legacy aliases
   white: string;
   stone50: string;
@@ -84,6 +87,9 @@ const lightColors: ThemeColors = {
   tabBarBg: "#FFFFFF",
   headerBg: "#FFFFFF",
   shadowColor: "#000000",
+  dmSent: "#3797F0",
+  dmReceived: "#EFEFEF",
+  dmUnread: "#3797F0",
   white: "#FFFFFF",
   stone50: "#F7F7F7",
   stone100: "#F0F0F0",
@@ -122,6 +128,9 @@ const darkColors: ThemeColors = {
   tabBarBg: "#0D0D0D",
   headerBg: "#0D0D0D",
   shadowColor: "#000000",
+  dmSent: "#3797F0",
+  dmReceived: "#3A3A3C",
+  dmUnread: "#3797F0",
   white: "#F5F5F5",
   stone50: "#1A1A1A",
   stone100: "#1F1F1F",
