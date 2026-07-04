@@ -35,10 +35,12 @@ Open [http://localhost:3000](http://localhost:3000).
 ```bash
 cd ios
 pnpm install
-pnpm start
+pnpm start:go
 ```
 
-Scan the QR code with [Expo Go](https://apps.apple.com/app/expo-go/id982107779) on your iPhone.
+Scan the QR code with [Expo Go](https://apps.apple.com/app/expo-go/id982107779) on your iPhone (**update Expo Go first** — SDK 57).
+
+If you get errors, see **[ios/README.md](ios/README.md#troubleshooting-expo-go)**.
 
 See **[ios/README.md](ios/README.md)** for standalone device installs via EAS Build.
 
