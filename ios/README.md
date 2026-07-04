@@ -18,12 +18,14 @@ No Mac or Apple Developer account required.
 
    ```bash
    git clone https://github.com/parcelstudio-io/parcel.git
-   cd parcel/ios
+   cd parcel/ios          # must end up in the ios folder (see below)
    pnpm install
    pnpm start:go
    ```
 
-   > Use **`cd parcel/ios`**, not the repo root. Do **not** need `pnpm install:all` for mobile-only testing.
+   > **Already in `ios`?** Your prompt shows `... ios %` — skip `cd ios` and run `pnpm install` directly.
+   >
+   > **Wrong folder?** Run `ls` — you should see `app.json`, `package.json`, and an `app/` directory.
 
 3. When the terminal shows a QR code, scan it with your iPhone **Camera** app or **Expo Go**.
 4. Phone and computer must be on the **same Wi‑Fi** (or use tunnel — see troubleshooting below).
@@ -41,6 +43,36 @@ This comes from **Expo’s cloud API**, not your app code. Common causes:
 | Expo Go SDK mismatch | Project is on SDK 54 — update Expo Go from App Store; do not use SDK 55+ only projects |
 | Cached bad state | `rm -rf .expo node_modules && pnpm install && pnpm start:go` |
 | Phone can’t reach your computer | `pnpm start:tunnel` and scan the new QR code |
+
+#### `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` (supply-chain policy)
+
+pnpm 10+ may block packages published within the last ~24 hours. This repo includes `ios/.npmrc` with `minimum-release-age=0` to allow install.
+
+After `git pull`, try:
+
+```bash
+cd parcel/ios
+pnpm install
+```
+
+If it still fails (global pnpm config overrides the project), use either:
+
+```bash
+pnpm install --config.minimum-release-age=0
+```
+
+or install with npm instead:
+
+```bash
+npm install
+npm run start:go
+```
+
+#### `cd: no such file or directory: ios`
+
+Your shell prompt already shows `ios %` — you are in the right folder. Run `pnpm install` without `cd ios`.
+
+Verify with `ls app.json` — if that file exists, you are in `parcel/ios`.
 
 #### `[ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL] Command "install:all" not found`
 
