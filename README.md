@@ -38,7 +38,7 @@ pnpm install
 pnpm start:go
 ```
 
-Scan the QR code with [Expo Go](https://apps.apple.com/app/expo-go/id982107779) on your iPhone (**update Expo Go first** — SDK 57).
+Scan the QR code with [Expo Go](https://apps.apple.com/app/expo-go/id982107779) on your iPhone (uses **Expo SDK 54**, compatible with App Store Expo Go).
 
 If you get errors, see **[ios/README.md](ios/README.md#troubleshooting-expo-go)**.
 

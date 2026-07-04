@@ -13,7 +13,7 @@
 
 No Mac or Apple Developer account required.
 
-1. **Update Expo Go** from the [App Store](https://apps.apple.com/app/expo-go/id982107779) — this project uses **Expo SDK 57**, which requires a recent Expo Go version.
+1. **Update Expo Go** from the [App Store](https://apps.apple.com/app/expo-go/id982107779). This project uses **Expo SDK 54**, which matches the App Store version of Expo Go.
 2. On your computer:
 
    ```bash
@@ -38,7 +38,7 @@ This comes from **Expo’s cloud API**, not your app code. Common causes:
 |-------|-----|
 | Ran `eas build` / `eas login` without a linked project | For Expo Go, skip EAS — use `pnpm start:go` only |
 | Stale Expo login session | Run `npx expo logout`, then `pnpm start:go` again |
-| Expo Go SDK mismatch | Update Expo Go from the App Store |
+| Expo Go SDK mismatch | Project is on SDK 54 — update Expo Go from App Store; do not use SDK 55+ only projects |
 | Cached bad state | `rm -rf .expo node_modules && pnpm install && pnpm start:go` |
 | Phone can’t reach your computer | `pnpm start:tunnel` and scan the new QR code |
 

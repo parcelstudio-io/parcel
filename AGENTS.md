@@ -26,6 +26,7 @@ Monorepo with three app folders. **Primary focus: `ios/`** (Expo React Native).
 ### Notes
 
 - Mock data: `webapp/src/lib/mock-data.ts` and `ios/lib/mock-data.ts` (keep in sync manually for now).
+- iOS app targets **Expo SDK 54** for App Store Expo Go compatibility (not SDK 55+).
 - No backend or database yet.
 - iOS voice input needs preview/production EAS build, not Expo Go.
 - Long-running dev servers: use tmux (`pnpm dev:web`, `pnpm dev:ios`).
