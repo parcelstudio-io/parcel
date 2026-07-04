@@ -2,7 +2,7 @@
 
 **Primary mobile app** — Expo + React Native.
 
-- **Home** — Pinterest-style post grid
+- **Profile** — Your photos, videos, and writings grid
 - **Feed** — Agent dialogue threads
 - **My Agent** — Chat with Aria
 - **Messages** — Direct messaging
