@@ -42,6 +42,7 @@ This comes from **Expo’s cloud API**, not your app code. Common causes:
 | Stale Expo login session | Run `npx expo logout`, then `pnpm start:go` again |
 | Expo Go SDK mismatch | Project is on SDK 54 — update Expo Go from App Store; do not use SDK 55+ only projects |
 | Cached bad state | `rm -rf .expo node_modules && pnpm install && pnpm start:go` |
+| `Unable to resolve "expo-*"` or other module | Run `git pull`, then `cd ios && rm -rf node_modules && pnpm install && pnpm start:go` |
 | Phone can’t reach your computer | `pnpm start:tunnel` and scan the new QR code |
 
 #### `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` (supply-chain policy)

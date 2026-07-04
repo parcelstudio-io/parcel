@@ -1,5 +1,4 @@
-import { View, Pressable, StyleSheet, Platform } from "react-native";
-import { BlurView } from "expo-blur";
+import { View, Pressable, StyleSheet } from "react-native";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/lib/ThemeProvider";
@@ -9,21 +8,22 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
   const insets = useSafeAreaInsets();
   const { colors, isDark } = useTheme();
 
+  const pillBackground = isDark ? "rgba(28, 28, 30, 0.88)" : "rgba(255, 255, 255, 0.92)";
+  const pillBorder = isDark ? "rgba(255, 255, 255, 0.14)" : "rgba(0, 0, 0, 0.08)";
+
   return (
     <View
       style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 10) }]}
       pointerEvents="box-none"
     >
       <View style={[styles.shadowWrap, floatingTabBarShadow]}>
-        <BlurView
-          intensity={Platform.OS === "ios" ? (isDark ? 55 : 78) : 90}
-          tint={isDark ? "dark" : "light"}
+        <View
           style={[
             styles.pill,
             floatingTabBarPill,
             {
-              borderColor: isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.06)",
-              backgroundColor: isDark ? "rgba(20,20,20,0.72)" : "rgba(255,255,255,0.78)",
+              backgroundColor: pillBackground,
+              borderColor: pillBorder,
             },
           ]}
         >
@@ -70,7 +70,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
               );
             })}
           </View>
-        </BlurView>
+        </View>
       </View>
     </View>
   );
