@@ -30,6 +30,16 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+**Agent chat (Gemma):** Install [Ollama](https://ollama.com), then from the repo root:
+
+```bash
+pnpm setup:gemma
+cp webapp/.env.example webapp/.env.local
+pnpm dev:web
+```
+
+Default model: `for/gemma3-thinking`. Override with `OLLAMA_MODEL` in `webapp/.env.local`.
+
 ### iOS app (primary)
 
 ```bash
@@ -58,3 +68,4 @@ From the repo root (after installing deps in each app folder):
 | `pnpm dev:ios` | Start Expo for iOS |
 | `pnpm build:web` | Production web build |
 | `pnpm install:all` | Install webapp + ios dependencies |
+| `pnpm setup:gemma` | Download Gemma reasoning model via Ollama |
