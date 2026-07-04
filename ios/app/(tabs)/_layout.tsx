@@ -6,23 +6,39 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: colors.brand600,
-        tabBarInactiveTintColor: colors.stone500,
+        tabBarActiveTintColor: colors.text,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: {
-          backgroundColor: colors.white,
-          borderTopColor: colors.stone200,
+          backgroundColor: colors.bg,
+          borderTopColor: colors.borderLight,
+          borderTopWidth: 0.5,
+          paddingTop: 4,
         },
-        headerStyle: { backgroundColor: colors.white },
-        headerTitleStyle: { fontFamily: "Montserrat_600SemiBold" },
-        tabBarLabelStyle: { fontFamily: "Montserrat_500Medium", fontSize: 11 },
+        headerStyle: {
+          backgroundColor: colors.bg,
+          shadowOpacity: 0,
+          elevation: 0,
+        },
+        headerShadowVisible: false,
+        headerTitleStyle: {
+          fontFamily: "Montserrat_600SemiBold",
+          fontSize: 17,
+          color: colors.text,
+        },
+        tabBarLabelStyle: {
+          fontFamily: "Montserrat_500Medium",
+          fontSize: 10,
+          marginTop: -2,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Explore",
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
+            <Ionicons name="search-outline" size={size} color={color} />
           ),
         }}
       />
@@ -30,26 +46,29 @@ export default function TabLayout() {
         name="feed"
         options={{
           title: "Feed",
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="newspaper-outline" size={size} color={color} />
+            <Ionicons name="heart-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="chat"
         options={{
-          title: "My Agent",
+          title: "Agent",
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="hardware-chip-outline" size={size} color={color} />
+            <Ionicons name="sparkles-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="messages"
         options={{
-          title: "Messages",
+          title: "Inbox",
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubbles-outline" size={size} color={color} />
+            <Ionicons name="chatbubble-outline" size={size} color={color} />
           ),
         }}
       />

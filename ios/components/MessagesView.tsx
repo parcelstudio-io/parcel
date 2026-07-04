@@ -9,13 +9,15 @@ import {
 } from "react-native";
 import { Text, TextInput } from "@/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
-import type { Conversation, DirectMessage } from "@/lib/types";
+import type { DirectMessage } from "@/lib/types";
 import { Avatar } from "./Avatar";
 import { conversations, directMessages, currentUser } from "@/lib/mock-data";
-import { colors, formatTime } from "@/lib/utils";
+import { colors, formatTime, radius, spacing } from "@/lib/utils";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function MessagesView() {
-  const [selectedId, setSelectedId] = useState<string>("conv1");
+  const insets = useSafeAreaInsets();
+  const [selectedId, setSelectedId] = useState<string | null>("conv1");
   const [messages, setMessages] = useState<Record<string, DirectMessage[]>>(directMessages);
   const [input, setInput] = useState("");
 
@@ -38,34 +40,41 @@ export function MessagesView() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.sidebar}>
-        <Text style={styles.sidebarTitle}>Messages</Text>
-        <FlatList
-          data={conversations}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ConversationItem
-              conversation={item}
-              active={selectedId === item.id}
-              onPress={() => setSelectedId(item.id)}
-            />
-          )}
-        />
-      </View>
+    <View style={[styles.root, { paddingTop: insets.top }]}>
+      <Text style={styles.pageTitle}>Inbox</Text>
+
+      <FlatList
+        data={conversations}
+        keyExtractor={(item) => item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.chipRow}
+        renderItem={({ item }) => (
+          <Pressable
+            onPress={() => setSelectedId(item.id)}
+            style={[styles.chip, selectedId === item.id && styles.chipActive]}
+          >
+            <Avatar user={item.participant} size={32} />
+            <Text
+              style={[styles.chipName, selectedId === item.id && styles.chipNameActive]}
+              numberOfLines={1}
+            >
+              {item.participant.name.split(" ")[0]}
+            </Text>
+          </Pressable>
+        )}
+      />
 
       <KeyboardAvoidingView
-        style={styles.chatPanel}
+        style={styles.chatArea}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={80}
       >
         {selectedConv ? (
           <>
             <View style={styles.chatHeader}>
-              <Avatar user={selectedConv.participant} size={36} />
-              <View>
-                <Text style={styles.chatName}>{selectedConv.participant.name}</Text>
-                <Text style={styles.chatHandle}>{selectedConv.participant.handle}</Text>
-              </View>
+              <Text style={styles.chatName}>{selectedConv.participant.name}</Text>
+              <Text style={styles.chatHandle}>{selectedConv.participant.handle}</Text>
             </View>
 
             <FlatList
@@ -76,10 +85,13 @@ export function MessagesView() {
                 const isMe = item.senderId === currentUser.id;
                 return (
                   <View style={[styles.msgRow, isMe && styles.msgRowMe]}>
-                    <View style={[styles.msgBubble, isMe ? styles.msgBubbleMe : styles.msgBubbleThem]}>
-                      <Text style={[styles.msgText, isMe && styles.msgTextMe]}>{item.content}</Text>
-                      <Text style={[styles.msgTime, isMe && styles.msgTimeMe]}>{item.timestamp}</Text>
-                    </View>
+                    {isMe ? (
+                      <View style={styles.bubbleMe}>
+                        <Text style={styles.textMe}>{item.content}</Text>
+                      </View>
+                    ) : (
+                      <Text style={styles.textThem}>{item.content}</Text>
+                    )}
                   </View>
                 );
               }}
@@ -90,17 +102,17 @@ export function MessagesView() {
                 style={styles.input}
                 value={input}
                 onChangeText={setInput}
-                placeholder="Type a message..."
-                placeholderTextColor={colors.stone400}
+                placeholder="Message…"
+                placeholderTextColor={colors.textTertiary}
                 onSubmitEditing={sendMessage}
                 returnKeyType="send"
               />
               <Pressable
                 onPress={sendMessage}
                 disabled={!input.trim()}
-                style={[styles.sendBtn, !input.trim() && { opacity: 0.4 }]}
+                style={[styles.sendBtn, !input.trim() && styles.sendBtnOff]}
               >
-                <Ionicons name="send" size={18} color={colors.white} />
+                <Ionicons name="arrow-up" size={18} color={colors.white} />
               </Pressable>
             </View>
           </>
@@ -114,129 +126,98 @@ export function MessagesView() {
   );
 }
 
-function ConversationItem({
-  conversation,
-  active,
-  onPress,
-}: {
-  conversation: Conversation;
-  active: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[styles.convItem, active && styles.convItemActive]}
-    >
-      <Avatar user={conversation.participant} size={44} />
-      <View style={styles.convContent}>
-        <View style={styles.convTop}>
-          <Text style={styles.convName} numberOfLines={1}>
-            {conversation.participant.name}
-          </Text>
-          <Text style={styles.convTime}>{conversation.lastMessageTime}</Text>
-        </View>
-        <Text style={styles.convPreview} numberOfLines={1}>
-          {conversation.lastMessage}
-        </Text>
-      </View>
-      {conversation.unread > 0 && (
-        <View style={styles.badge}>
-          <Text style={styles.badgeText}>{conversation.unread}</Text>
-        </View>
-      )}
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.white,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.stone200,
-    overflow: "hidden",
-  },
-  sidebar: {
-    maxHeight: 200,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.stone100,
-  },
-  sidebarTitle: {
-    fontSize: 18,
+  root: { flex: 1, backgroundColor: colors.bg },
+  pageTitle: {
+    fontSize: 28,
     fontWeight: "600",
-    padding: 16,
-    paddingBottom: 8,
+    color: colors.text,
+    letterSpacing: -0.5,
+    paddingHorizontal: spacing.lg,
+    marginBottom: spacing.md,
   },
-  convItem: {
+  chipRow: {
+    paddingHorizontal: spacing.lg,
+    gap: spacing.sm,
+    paddingBottom: spacing.md,
+  },
+  chip: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    gap: spacing.sm,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.border,
+    maxWidth: 160,
   },
-  convItemActive: { backgroundColor: colors.brand50 },
-  convContent: { flex: 1, minWidth: 0 },
-  convTop: { flexDirection: "row", justifyContent: "space-between", marginBottom: 2 },
-  convName: { fontSize: 15, fontWeight: "600", flex: 1 },
-  convTime: { fontSize: 12, color: colors.stone400 },
-  convPreview: { fontSize: 14, color: colors.stone500 },
-  badge: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: colors.brand600,
-    justifyContent: "center",
-    alignItems: "center",
+  chipActive: {
+    borderColor: colors.text,
+    backgroundColor: colors.bgMuted,
   },
-  badgeText: { color: colors.white, fontSize: 11, fontWeight: "600" },
-  chatPanel: { flex: 1 },
+  chipName: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: colors.textSecondary,
+    flexShrink: 1,
+  },
+  chipNameActive: {
+    color: colors.text,
+    fontWeight: "600",
+  },
+  chatArea: { flex: 1, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   chatHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.stone100,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
-  chatName: { fontSize: 16, fontWeight: "600" },
-  chatHandle: { fontSize: 12, color: colors.stone500 },
-  messageList: { padding: 16, flexGrow: 1 },
-  msgRow: { marginBottom: 8, alignItems: "flex-start" },
+  chatName: { fontSize: 17, fontWeight: "600", color: colors.text },
+  chatHandle: { fontSize: 13, color: colors.textSecondary, marginTop: 2 },
+  messageList: { paddingHorizontal: spacing.lg, paddingBottom: spacing.md, flexGrow: 1 },
+  msgRow: { marginBottom: spacing.md, alignItems: "flex-start" },
   msgRowMe: { alignItems: "flex-end" },
-  msgBubble: { maxWidth: "80%", borderRadius: 16, padding: 12 },
-  msgBubbleMe: { backgroundColor: colors.brand600 },
-  msgBubbleThem: { backgroundColor: colors.stone100 },
-  msgText: { fontSize: 14, color: colors.stone800 },
-  msgTextMe: { color: colors.white },
-  msgTime: { fontSize: 11, color: colors.stone400, marginTop: 4 },
-  msgTimeMe: { color: colors.brand100 },
+  bubbleMe: {
+    maxWidth: "85%",
+    backgroundColor: colors.chatUserBubble,
+    borderRadius: radius.xl,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  textMe: { fontSize: 16, lineHeight: 22, color: colors.text },
+  textThem: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: colors.text,
+    maxWidth: "92%",
+  },
   inputRow: {
     flexDirection: "row",
-    gap: 8,
-    padding: 12,
-    borderTopWidth: 1,
-    borderTopColor: colors.stone100,
+    alignItems: "center",
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.borderLight,
   },
   input: {
     flex: 1,
     borderWidth: 1,
-    borderColor: colors.stone200,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    fontSize: 14,
-    backgroundColor: colors.stone50,
+    borderColor: colors.border,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 12,
+    fontSize: 16,
+    backgroundColor: colors.bg,
   },
   sendBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.brand600,
-    justifyContent: "center",
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.text,
     alignItems: "center",
+    justifyContent: "center",
   },
+  sendBtnOff: { backgroundColor: colors.border },
   empty: { flex: 1, justifyContent: "center", alignItems: "center" },
-  emptyText: { color: colors.stone400 },
+  emptyText: { color: colors.textSecondary },
 });

@@ -46,7 +46,7 @@ export default function RootLayout() {
         options={{
           headerShown: true,
           headerStyle: { backgroundColor: colors.white },
-          headerTintColor: colors.brand600,
+          headerTintColor: colors.text,
           headerBackTitleStyle: { fontFamily: "Montserrat_500Medium" },
         }}
       />

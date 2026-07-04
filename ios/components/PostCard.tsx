@@ -3,10 +3,10 @@ import { Text } from "@/components/AppText";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import type { Post } from "@/lib/types";
-import { colors } from "@/lib/utils";
+import { colors, radius, spacing } from "@/lib/utils";
 
 const { width } = Dimensions.get("window");
-const cardWidth = (width - 48) / 2;
+const cardWidth = (width - spacing.lg * 2 - spacing.sm) / 2;
 
 type Props = { post: Post };
 
@@ -15,34 +15,31 @@ export function PostCard({ post }: Props) {
     <Link href={`/post/${post.id}`} asChild>
       <Pressable style={styles.card}>
         {post.type === "writing" ? (
-          <View style={[styles.writingCard, { minHeight: 180 }]}>
-            <Ionicons name="create-outline" size={20} color={colors.stone400} />
-            <Text style={styles.writingTitle}>{post.title}</Text>
-            <Text style={styles.writingPreview} numberOfLines={4}>
+          <View style={styles.writingCard}>
+            <Text style={styles.writingTitle} numberOfLines={2}>
+              {post.title}
+            </Text>
+            <Text style={styles.writingPreview} numberOfLines={3}>
               {post.writingContent}
             </Text>
           </View>
         ) : (
-          <View>
+          <View style={styles.imageWrap}>
             <Image source={{ uri: post.imageUrl }} style={styles.image} />
             {post.type === "video" && (
-              <View style={styles.playOverlay}>
-                <View style={styles.playBtn}>
-                  <Ionicons name="play" size={20} color={colors.stone900} />
-                </View>
+              <View style={styles.playBadge}>
+                <Ionicons name="play" size={14} color={colors.white} />
               </View>
             )}
           </View>
         )}
-        <View style={styles.footer}>
-          <View style={styles.stat}>
-            <Ionicons name="heart-outline" size={14} color={colors.stone500} />
-            <Text style={styles.statText}>{post.likes}</Text>
-          </View>
-          <View style={styles.stat}>
-            <Ionicons name="chatbubble-outline" size={14} color={colors.stone500} />
-            <Text style={styles.statText}>{post.comments.length}</Text>
-          </View>
+        <View style={styles.meta}>
+          <Text style={styles.metaTitle} numberOfLines={1}>
+            {post.title}
+          </Text>
+          <Text style={styles.metaSub}>
+            {post.likes} likes · {post.comments.length} comments
+          </Text>
         </View>
       </Pressable>
     </Link>
@@ -56,50 +53,59 @@ export function getCardWidth() {
 const styles = StyleSheet.create({
   card: {
     width: cardWidth,
-    backgroundColor: colors.white,
-    borderRadius: 16,
+    marginBottom: spacing.lg,
+  },
+  imageWrap: {
+    borderRadius: radius.lg,
     overflow: "hidden",
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: colors.bgMuted,
   },
-  image: { width: "100%", height: cardWidth * 1.2, resizeMode: "cover" },
-  playOverlay: {
+  image: {
+    width: "100%",
+    height: cardWidth * 1.15,
+    resizeMode: "cover",
+  },
+  playBadge: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.2)",
-    justifyContent: "center",
+    bottom: 10,
+    right: 10,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "rgba(0,0,0,0.55)",
     alignItems: "center",
-  },
-  playBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "rgba(255,255,255,0.9)",
     justifyContent: "center",
-    alignItems: "center",
   },
   writingCard: {
-    padding: 16,
-    backgroundColor: colors.stone100,
-    justifyContent: "space-between",
+    borderRadius: radius.lg,
+    backgroundColor: colors.bgMuted,
+    padding: spacing.md,
+    minHeight: 140,
+    justifyContent: "flex-end",
   },
-  writingTitle: { fontSize: 15, fontWeight: "600", color: colors.stone900, marginTop: 8 },
-  writingPreview: { fontSize: 13, lineHeight: 18, color: colors.stone600, marginTop: 8 },
-  footer: {
-    flexDirection: "row",
-    gap: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: colors.stone100,
+  writingTitle: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: colors.text,
+    marginBottom: spacing.xs,
   },
-  stat: { flexDirection: "row", alignItems: "center", gap: 4 },
-  statText: { fontSize: 12, color: colors.stone500 },
+  writingPreview: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: colors.textSecondary,
+  },
+  meta: {
+    marginTop: spacing.sm,
+    paddingHorizontal: 2,
+  },
+  metaTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.text,
+  },
+  metaSub: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
 });

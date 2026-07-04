@@ -2,9 +2,11 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { Text } from "@/components/AppText";
 import { PostCard, getCardWidth } from "@/components/PostCard";
 import { posts, currentUser } from "@/lib/mock-data";
-import { colors } from "@/lib/utils";
+import { colors, spacing } from "@/lib/utils";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
   const cardWidth = getCardWidth();
   const leftColumn: typeof posts = [];
   const rightColumn: typeof posts = [];
@@ -15,9 +17,13 @@ export default function HomeScreen() {
   });
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>{currentUser.name}</Text>
-      <Text style={styles.subtitle}>Your photos, writings, and moments</Text>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.md }]}
+      showsVerticalScrollIndicator={false}
+    >
+      <Text style={styles.greeting}>Hello, {currentUser.name.split(" ")[0]}</Text>
+      <Text style={styles.subtitle}>Your moments & writings</Text>
 
       <View style={styles.grid}>
         <View style={[styles.column, { width: cardWidth }]}>
@@ -36,10 +42,20 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.stone50 },
-  content: { padding: 16, paddingBottom: 32 },
-  title: { fontSize: 24, fontWeight: "700", color: colors.stone900 },
-  subtitle: { fontSize: 15, color: colors.stone500, marginTop: 4, marginBottom: 20 },
+  container: { flex: 1, backgroundColor: colors.bg },
+  content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xl },
+  greeting: {
+    fontSize: 28,
+    fontWeight: "600",
+    color: colors.text,
+    letterSpacing: -0.5,
+  },
+  subtitle: {
+    fontSize: 15,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
+    marginBottom: spacing.lg,
+  },
   grid: { flexDirection: "row", justifyContent: "space-between" },
-  column: { gap: 0 },
+  column: {},
 });
