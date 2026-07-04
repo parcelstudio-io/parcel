@@ -1,13 +1,12 @@
 import type { TextStyle } from "react-native";
 
 export const fonts = {
-  regular: "Montserrat_400Regular",
-  medium: "Montserrat_500Medium",
-  semiBold: "Montserrat_600SemiBold",
-  bold: "Montserrat_700Bold",
+  regular: "Jost_400Regular",
+  medium: "Jost_500Medium",
+  semiBold: "Jost_600SemiBold",
+  bold: "Jost_700Bold",
 } as const;
 
-/** Map fontWeight to the matching Montserrat face */
 export function fontForWeight(
   weight?: TextStyle["fontWeight"]
 ): (typeof fonts)[keyof typeof fonts] {
@@ -29,7 +28,6 @@ export function fontForWeight(
   }
 }
 
-/** Apply Montserrat to a text style, picking the right weight file */
 export function withFont(style: TextStyle = {}): TextStyle {
   const { fontWeight, ...rest } = style;
   return {

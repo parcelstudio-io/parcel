@@ -8,8 +8,8 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
   const insets = useSafeAreaInsets();
   const { colors, isDark } = useTheme();
 
-  const pillBackground = isDark ? "rgba(28, 28, 30, 0.88)" : "rgba(255, 255, 255, 0.92)";
-  const pillBorder = isDark ? "rgba(255, 255, 255, 0.14)" : "rgba(0, 0, 0, 0.08)";
+  const pillBackground = isDark ? "rgba(20, 20, 18, 0.94)" : "rgba(250, 249, 246, 0.94)";
+  const pillBorder = isDark ? "rgba(245, 244, 240, 0.1)" : "rgba(26, 26, 24, 0.1)";
 
   return (
     <View
@@ -47,12 +47,12 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
                 navigation.emit({ type: "tabLongPress", target: route.key });
               };
 
-              const color = isFocused ? colors.text : colors.textSecondary;
+              const color = isFocused ? colors.text : colors.textTertiary;
               const icon =
                 options.tabBarIcon?.({
                   focused: isFocused,
                   color,
-                  size: 26,
+                  size: 22,
                 }) ?? null;
 
               return (
@@ -66,6 +66,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
                   style={({ pressed }) => [styles.tab, pressed && styles.tabPressed]}
                 >
                   {icon}
+                  {isFocused ? <View style={[styles.dot, { backgroundColor: colors.text }]} /> : null}
                 </Pressable>
               );
             })}
@@ -86,8 +87,8 @@ const styles = StyleSheet.create({
   },
   shadowWrap: {
     width: "100%",
-    maxWidth: 420,
-    paddingHorizontal: 20,
+    maxWidth: 400,
+    paddingHorizontal: 24,
   },
   pill: {
     width: "100%",
@@ -96,18 +97,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
-    paddingHorizontal: 8,
-    paddingVertical: 10,
-    minHeight: 56,
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    minHeight: 52,
   },
   tab: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingVertical: 4,
+    gap: 4,
+  },
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
   },
   tabPressed: {
-    opacity: 0.65,
+    opacity: 0.5,
   },
 });

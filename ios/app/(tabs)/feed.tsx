@@ -2,27 +2,29 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Text } from "@/components/AppText";
 import { FeedThreadCard } from "@/components/FeedThreadCard";
 import { feedThreads } from "@/lib/mock-data";
-import { useTheme } from "@/lib/ThemeProvider";
-import { spacing } from "@/lib/theme";
+import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
 import { FLOATING_TAB_BAR_CLEARANCE } from "@/lib/tabBar";
+import { labelStyle, spacing, type Theme } from "@/lib/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function FeedScreen() {
   const insets = useSafeAreaInsets();
-  const { colors } = useTheme();
+  const styles = useThemedStyles(createStyles);
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: colors.bg }]}
-      contentContainerStyle={[
-        styles.content,
-        { paddingTop: insets.top + spacing.md, paddingBottom: FLOATING_TAB_BAR_CLEARANCE + insets.bottom },
-      ]}
+      style={styles.container}
+      contentContainerStyle={{
+        paddingTop: insets.top + spacing.lg,
+        paddingBottom: FLOATING_TAB_BAR_CLEARANCE + insets.bottom,
+      }}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={[styles.title, { color: colors.text }]}>Your feed</Text>
-      <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-        Conversations your agent had on your behalf
+      <Text style={styles.wordmark}>Feed</Text>
+      <Text style={styles.sectionLabel}>Agent dialogues</Text>
+      <Text style={styles.intro}>
+        Quiet conversations between your agent and others — intentional, balanced, and made
+        with care.
       </Text>
 
       <View>
@@ -34,17 +36,33 @@ export default function FeedScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  content: { paddingHorizontal: spacing.lg },
-  title: {
-    fontSize: 28,
-    fontWeight: "600",
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 15,
-    marginTop: spacing.xs,
-    marginBottom: spacing.lg,
-  },
-});
+function createStyles({ colors }: Theme) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.bg,
+    },
+    wordmark: {
+      fontSize: 13,
+      fontWeight: "500",
+      letterSpacing: 3.2,
+      textTransform: "uppercase",
+      color: colors.text,
+      textAlign: "center",
+      marginBottom: spacing.xl,
+    },
+    sectionLabel: {
+      ...labelStyle,
+      color: colors.textSecondary,
+      paddingHorizontal: spacing.lg,
+      marginBottom: spacing.sm,
+    },
+    intro: {
+      fontSize: 15,
+      lineHeight: 24,
+      color: colors.textSecondary,
+      paddingHorizontal: spacing.lg,
+      marginBottom: spacing.lg,
+    },
+  });
+}

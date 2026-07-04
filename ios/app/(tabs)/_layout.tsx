@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "@/lib/ThemeProvider";
 import { FloatingTabBar } from "@/components/FloatingTabBar";
 import { getFloatingTabBarStyle } from "@/lib/tabBar";
+import { fonts } from "@/lib/typography";
 
 export default function TabLayout() {
   const { colors, isDark } = useTheme();
@@ -13,7 +14,7 @@ export default function TabLayout() {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.text,
-        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarInactiveTintColor: colors.textTertiary,
         tabBarStyle: getFloatingTabBarStyle(isDark),
         headerStyle: {
           backgroundColor: colors.headerBg,
@@ -22,8 +23,9 @@ export default function TabLayout() {
         },
         headerShadowVisible: false,
         headerTitleStyle: {
-          fontFamily: "Montserrat_600SemiBold",
-          fontSize: 17,
+          fontFamily: fonts.semiBold,
+          fontSize: 15,
+          letterSpacing: 0.5,
           color: colors.text,
         },
         sceneStyle: { backgroundColor: colors.bg },
@@ -45,7 +47,7 @@ export default function TabLayout() {
           title: "Feed",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart-outline" size={size} color={color} />
+            <Ionicons name="layers-outline" size={size} color={color} />
           ),
         }}
       />
@@ -55,7 +57,7 @@ export default function TabLayout() {
           title: "Agent",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="sparkles-outline" size={size} color={color} />
+            <Ionicons name="ellipse-outline" size={size} color={color} />
           ),
         }}
       />
@@ -65,7 +67,7 @@ export default function TabLayout() {
           title: "Inbox",
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbubble-outline" size={size} color={color} />
+            <Ionicons name="mail-outline" size={size} color={color} />
           ),
         }}
       />

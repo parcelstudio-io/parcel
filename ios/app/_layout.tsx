@@ -4,12 +4,13 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import {
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold,
-  Montserrat_700Bold,
-} from "@expo-google-fonts/montserrat";
+  Jost_400Regular,
+  Jost_500Medium,
+  Jost_600SemiBold,
+  Jost_700Bold,
+} from "@expo-google-fonts/jost";
 import { ThemeProvider, useTheme } from "@/lib/ThemeProvider";
+import { fonts } from "@/lib/typography";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,7 +22,7 @@ function RootStack() {
       <StatusBar style={isDark ? "light" : "dark"} />
       <Stack
         screenOptions={{
-          headerTitleStyle: { fontFamily: "Montserrat_600SemiBold", color: colors.text },
+          headerTitleStyle: { fontFamily: fonts.semiBold, color: colors.text },
           headerStyle: { backgroundColor: colors.headerBg },
           contentStyle: { backgroundColor: colors.bg },
         }}
@@ -32,7 +33,7 @@ function RootStack() {
           options={{
             headerShown: true,
             headerTintColor: colors.text,
-            headerBackTitleStyle: { fontFamily: "Montserrat_500Medium" },
+            headerBackTitleStyle: { fontFamily: fonts.medium },
           }}
         />
       </Stack>
@@ -42,10 +43,10 @@ function RootStack() {
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    Montserrat_400Regular,
-    Montserrat_500Medium,
-    Montserrat_600SemiBold,
-    Montserrat_700Bold,
+    Jost_400Regular,
+    Jost_500Medium,
+    Jost_600SemiBold,
+    Jost_700Bold,
   });
 
   useEffect(() => {

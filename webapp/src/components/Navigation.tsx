@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, Rss, Bot, MessagesSquare, MessageCircle } from "lucide-react";
+import { User, Layers, Circle, Mail, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { currentUser } from "@/lib/mock-data";
 
 const navItems = [
   { href: "/", label: "Profile", icon: User },
-  { href: "/feed", label: "Feed", icon: Rss },
-  { href: "/chat", label: "My Agent", icon: Bot },
-  { href: "/messages", label: "Messages", icon: MessagesSquare },
+  { href: "/feed", label: "Feed", icon: Layers },
+  { href: "/chat", label: "Agent", icon: Circle },
+  { href: "/messages", label: "Inbox", icon: Mail },
 ];
 
 export function Navigation() {
@@ -19,23 +19,27 @@ export function Navigation() {
   return (
     <>
       <nav
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-6 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden"
         aria-label="Main"
       >
-        <div className="pointer-events-auto flex w-full max-w-[420px] items-center justify-around rounded-[32px] border border-black/5 bg-white/75 px-2 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:border-white/10 dark:bg-[rgba(20,20,20,0.72)]">
+        <div className="pointer-events-auto flex w-full max-w-[400px] items-center justify-around rounded-[10px] border border-black/10 bg-[rgba(250,249,246,0.94)] px-1 py-2 shadow-[0_2px_8px_rgba(26,26,24,0.06)] backdrop-blur-md dark:border-white/10 dark:bg-[rgba(20,20,18,0.94)]">
           {navItems.map(({ href, icon: Icon }) => {
             const active = pathname === href || (href !== "/" && pathname.startsWith(href));
             return (
               <Link
                 key={href}
                 href={href}
-                className={cn(
-                  "flex flex-1 items-center justify-center rounded-2xl py-2.5 transition-opacity active:opacity-60",
-                  active ? "text-app-text" : "text-app-text-secondary"
-                )}
+                className="flex flex-1 flex-col items-center gap-1 py-2"
                 aria-label={href}
               >
-                <Icon className="h-[26px] w-[26px]" strokeWidth={active ? 2.25 : 1.75} />
+                <Icon
+                  className={cn(
+                    "h-[22px] w-[22px]",
+                    active ? "text-app-text" : "text-app-text-tertiary"
+                  )}
+                  strokeWidth={active ? 2 : 1.5}
+                />
+                {active ? <span className="h-1 w-1 rounded-full bg-app-text" /> : null}
               </Link>
             );
           })}
@@ -43,24 +47,14 @@ export function Navigation() {
       </nav>
 
       <aside className="fixed left-0 top-0 z-40 hidden h-full w-64 flex-col border-r border-app-border bg-app-surface md:flex">
-        <div className="flex items-center gap-2 border-b border-app-border-light px-6 py-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white">
-            <MessageCircle className="h-5 w-5" />
-          </div>
-          <span className="text-xl font-semibold tracking-tight">Parcel</span>
+        <div className="border-b border-app-border-light px-8 py-8">
+          <p className="label-caps text-app-text">Parcel</p>
         </div>
 
-        <div className="flex flex-1 flex-col px-4 py-6">
-          <div className="mb-8 flex items-center gap-3 rounded-xl bg-app-surface-muted px-4 py-3">
-            <img
-              src={currentUser.avatar}
-              alt={currentUser.name}
-              className="h-10 w-10 rounded-full bg-app-surface-muted"
-            />
-            <div>
-              <p className="text-sm font-medium">{currentUser.name}</p>
-              <p className="text-xs text-app-text-secondary">{currentUser.handle}</p>
-            </div>
+        <div className="flex flex-1 flex-col px-6 py-8">
+          <div className="mb-10 border-b border-app-border-light pb-8">
+            <p className="font-medium">{currentUser.name}</p>
+            <p className="mt-1 text-xs text-app-text-secondary">{currentUser.handle}</p>
           </div>
 
           <ul className="space-y-1">
@@ -71,13 +65,13 @@ export function Navigation() {
                   <Link
                     href={href}
                     className={cn(
-                      "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
+                      "flex items-center gap-3 px-3 py-3 text-sm font-medium transition-colors",
                       active
-                        ? "bg-app-nav-active text-app-nav-active-text"
-                        : "text-app-text-secondary hover:bg-app-surface-muted hover:text-app-text"
+                        ? "text-app-text underline decoration-app-border underline-offset-4"
+                        : "text-app-text-secondary hover:text-app-text"
                     )}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-[18px] w-[18px]" strokeWidth={1.5} />
                     {label}
                   </Link>
                 </li>
@@ -86,8 +80,8 @@ export function Navigation() {
           </ul>
         </div>
 
-        <div className="border-t border-app-border-light px-6 py-4">
-          <p className="text-xs text-app-text-tertiary">Agent: Aria</p>
+        <div className="border-t border-app-border-light px-8 py-6">
+          <p className="label-caps text-app-text-tertiary">Agent · Aria</p>
         </div>
       </aside>
     </>

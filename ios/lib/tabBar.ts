@@ -1,9 +1,21 @@
-import { Platform, StyleSheet } from "react-native";
+export const floatingTabBarPill = {
+  borderRadius: 10,
+  overflow: "hidden" as const,
+  borderWidth: 1,
+};
+
+export const floatingTabBarShadow = {
+  shadowColor: "#1A1A18",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.06,
+  shadowRadius: 8,
+  elevation: 4,
+};
 
 /** Bottom inset so scroll content clears the floating tab bar. */
 export const FLOATING_TAB_BAR_CLEARANCE = 96;
 
-export function getFloatingTabBarStyle(isDark: boolean) {
+export function getFloatingTabBarStyle(_isDark: boolean) {
   return {
     position: "absolute" as const,
     left: 0,
@@ -15,20 +27,3 @@ export function getFloatingTabBarStyle(isDark: boolean) {
     shadowOpacity: 0,
   };
 }
-
-export const floatingTabBarShadow = Platform.select({
-  ios: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 24,
-  },
-  android: { elevation: 12 },
-  default: {},
-});
-
-export const floatingTabBarPill = {
-  borderRadius: 32,
-  overflow: "hidden" as const,
-  borderWidth: StyleSheet.hairlineWidth,
-};

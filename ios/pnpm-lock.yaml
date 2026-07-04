@@ -15,6 +15,9 @@ importers:
 
   .:
     dependencies:
+      '@expo-google-fonts/jost':
+        specifier: ^0.4.2
+        version: 0.4.2
       '@expo-google-fonts/montserrat':
         specifier: ^0.4.2
         version: 0.4.2
@@ -598,6 +601,9 @@ packages:
   '@babel/types@7.29.7':
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
+
+  '@expo-google-fonts/jost@0.4.2':
+    resolution: {integrity: sha512-3iFG70tU53VEt+SRz6ItDUH7S8xBv/m2NNfE3aVRfpZgdLus8HmE1Bjib9iAni/nr0hqT06pfL56ahHjCR6uiw==}
 
   '@expo-google-fonts/montserrat@0.4.2':
     resolution: {integrity: sha512-Xyq7rKJhhZOE1Xk4wKSSVoUeOkFmQEMhtZ3pdFrgYckGZMs115Apmld1AI8Ju+yrl5GzDdfRCCqRr33dvEDYUA==}
@@ -3841,6 +3847,8 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
+
+  '@expo-google-fonts/jost@0.4.2': {}
 
   '@expo-google-fonts/montserrat@0.4.2': {}
 

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Jost } from "next/font/google";
 import { Navigation } from "@/components/Navigation";
 import "./globals.css";
 
-const montserrat = Montserrat({
+const jost = Jost({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-montserrat",
+  variable: "--font-jost",
 });
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} ${montserrat.className} bg-app-bg text-app-text antialiased`}
+        className={`${jost.variable} ${jost.className} bg-app-bg text-app-text antialiased`}
       >
         <div className="flex min-h-screen">
           <Navigation />

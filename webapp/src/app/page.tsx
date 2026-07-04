@@ -1,84 +1,71 @@
-import { PostCard } from "@/components/PostCard";
 import { Avatar } from "@/components/Avatar";
 import { posts, currentUser } from "@/lib/mock-data";
-import { Grid3X3, Bookmark } from "lucide-react";
+import Link from "next/link";
 
 export default function ProfilePage() {
   const userPosts = posts.filter((p) => p.author.id === currentUser.id);
 
   return (
-    <div className="mx-auto max-w-2xl px-4 pb-28 pt-4 md:px-8 md:py-8 md:pb-8">
-      <header className="mb-5 flex items-center justify-between">
-        <h1 className="text-[22px] font-bold tracking-tight">
-          {currentUser.handle.replace("@", "")}
-        </h1>
-      </header>
+    <div className="mx-auto max-w-2xl px-6 pb-28 pt-8 md:px-10 md:py-12 md:pb-8">
+      <p className="label-caps mb-12 text-center text-app-text">Parcel</p>
 
-      <div className="mb-5 flex items-center gap-8">
-        <Avatar user={currentUser} size="profile" />
-        <div className="flex flex-1 justify-around text-center">
-          <div>
-            <p className="text-lg font-bold">{userPosts.length}</p>
-            <p className="text-sm text-app-text-secondary">Posts</p>
-          </div>
-          <div>
-            <p className="text-lg font-bold">128</p>
-            <p className="text-sm text-app-text-secondary">Followers</p>
-          </div>
-          <div>
-            <p className="text-lg font-bold">96</p>
-            <p className="text-sm text-app-text-secondary">Following</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <p className="font-semibold">{currentUser.name}</p>
-        <p className="mt-1 text-sm leading-relaxed text-app-text">
-          Building Parcel · trail runner · sharing photos, writing, and life through my agent
-          Aria.
+      <section className="mb-10">
+        <p className="label-caps mb-4 text-app-text-secondary">The story</p>
+        <h1 className="mb-4 text-[22px] font-medium tracking-tight">{currentUser.name}</h1>
+        <p className="text-[15px] leading-relaxed text-app-text-secondary">
+          Your personal agent learns who you are — your interests, rhythm, and intentions — so
+          it can represent you with care. Share photos, writing, and moments; let Aria connect
+          you through quiet, intentional dialogue.
         </p>
+      </section>
+
+      <div className="mb-8 flex items-center justify-center gap-8 border-y border-app-border py-6">
+        <div className="text-center">
+          <p className="text-lg font-medium">{userPosts.length}</p>
+          <p className="text-xs text-app-text-secondary">Posts</p>
+        </div>
+        <div className="h-7 w-px bg-app-border" />
+        <div className="text-center">
+          <p className="text-lg font-medium">128</p>
+          <p className="text-xs text-app-text-secondary">Connections</p>
+        </div>
       </div>
 
       <button
         type="button"
-        className="mb-5 w-full rounded-lg border border-app-border py-2 text-sm font-semibold"
+        className="mb-12 w-full border border-app-border py-3 text-[13px] font-medium tracking-wide"
       >
         Edit profile
       </button>
 
-      <div className="mb-0.5 flex justify-center gap-12 border-y border-app-border-light py-2.5">
-        <Grid3X3 className="h-[22px] w-[22px] text-app-text" />
-        <Bookmark className="h-[22px] w-[22px] text-app-text-tertiary" />
-      </div>
+      <section>
+        <p className="label-caps mb-1 text-app-text-secondary">Collection</p>
+        <p className="mb-8 text-sm text-app-text-tertiary">{currentUser.handle}</p>
 
-      <div className="grid grid-cols-3 gap-0.5">
-        {userPosts.map((post) => (
-          <ProfileGridTile key={post.id} post={post} />
-        ))}
-      </div>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-10">
+          {userPosts.map((post) => (
+            <Link key={post.id} href={`/post/${post.id}`} className="group">
+              {post.type === "writing" ? (
+                <div className="flex aspect-[4/5] items-end bg-app-surface-muted p-4">
+                  <p className="text-sm font-medium leading-snug">{post.title}</p>
+                </div>
+              ) : (
+                <div className="relative aspect-[4/5] overflow-hidden bg-app-surface-muted">
+                  <img
+                    src={post.imageUrl}
+                    alt={post.title}
+                    className="h-full w-full object-cover transition-opacity group-hover:opacity-90"
+                  />
+                </div>
+              )}
+              <p className="mt-3 text-sm font-medium leading-snug">{post.title}</p>
+              <p className="mt-1 text-[13px] text-app-text-secondary">
+                {post.likes} appreciations · {post.comments.length} notes
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
-  );
-}
-
-function ProfileGridTile({ post }: { post: (typeof posts)[number] }) {
-  if (post.type === "writing") {
-    return (
-      <a
-        href={`/post/${post.id}`}
-        className="flex aspect-square flex-col items-center justify-center bg-app-surface-muted p-2 text-center"
-      >
-        <span className="line-clamp-3 text-xs font-semibold">{post.title}</span>
-      </a>
-    );
-  }
-
-  return (
-    <a href={`/post/${post.id}`} className="relative aspect-square overflow-hidden bg-app-surface-muted">
-      <img src={post.imageUrl} alt={post.title} className="h-full w-full object-cover" />
-      {post.type === "video" && (
-        <span className="absolute right-2 top-2 text-white drop-shadow">▶</span>
-      )}
-    </a>
   );
 }

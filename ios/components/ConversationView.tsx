@@ -177,24 +177,22 @@ function createStyles({ colors }: Theme) {
     msgRowMe: { alignSelf: "flex-end" },
     msgRowThem: { alignSelf: "flex-start" },
     bubble: {
-      borderRadius: 22,
+      borderRadius: radius.md,
       paddingHorizontal: 14,
       paddingVertical: 10,
     },
     bubbleMe: {
       backgroundColor: colors.dmSent,
-      borderBottomRightRadius: 6,
     },
     bubbleThem: {
       backgroundColor: colors.dmReceived,
-      borderBottomLeftRadius: 6,
     },
     bubbleText: {
       fontSize: 17,
       lineHeight: 22,
       color: colors.text,
     },
-    bubbleTextMe: { color: "#FFFFFF" },
+    bubbleTextMe: { color: colors.buttonPrimaryIcon },
     inputRow: {
       paddingHorizontal: spacing.sm,
       paddingTop: spacing.sm,
@@ -206,7 +204,7 @@ function createStyles({ colors }: Theme) {
       flexDirection: "row",
       alignItems: "center",
       minHeight: 52,
-      borderRadius: radius.pill,
+      borderRadius: radius.md,
       borderWidth: 1,
       borderColor: colors.border,
       paddingLeft: spacing.md,
@@ -221,9 +219,10 @@ function createStyles({ colors }: Theme) {
       maxHeight: 140,
     },
     sendLabel: {
-      fontSize: 17,
-      fontWeight: "600",
-      color: colors.dmSent,
+      fontSize: 14,
+      fontWeight: "500",
+      letterSpacing: 0.5,
+      color: colors.text,
       paddingHorizontal: spacing.sm,
     },
     inputIcons: {

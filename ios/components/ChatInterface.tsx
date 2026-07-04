@@ -15,7 +15,7 @@ import { initialChatMessages } from "@/lib/mock-data";
 import { sendAgentMessage } from "@/lib/agent";
 import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
 import { useKeyboardHeight } from "@/hooks/useKeyboardHeight";
-import { formatTime, radius, spacing, type Theme } from "@/lib/theme";
+import { formatTime, radius, spacing, labelStyle, type Theme } from "@/lib/theme";
 import { FLOATING_TAB_BAR_CLEARANCE } from "@/lib/tabBar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -105,11 +105,12 @@ export function ChatInterface() {
         keyboardDismissMode="interactive"
         ListHeaderComponent={
           <View style={styles.hero}>
-            <View style={styles.heroOrb}>
-              <Text style={styles.heroInitial}>A</Text>
-            </View>
+            <Text style={styles.wordmark}>My agent</Text>
             <Text style={styles.heroTitle}>Aria</Text>
-            <Text style={styles.heroSub}>Tell me about yourself — I’ll represent you thoughtfully.</Text>
+            <Text style={styles.heroSub}>
+              Tell me about yourself — your interests, rhythm, and intentions. I’ll represent
+              you with care.
+            </Text>
           </View>
         }
         ListFooterComponent={
@@ -184,36 +185,26 @@ function createStyles({ colors }: Theme) {
       paddingBottom: spacing.md + FLOATING_TAB_BAR_CLEARANCE,
     },
     hero: {
-      alignItems: "center",
       paddingTop: spacing.lg,
       paddingBottom: spacing.xl,
     },
-    heroOrb: {
-      width: 56,
-      height: 56,
-      borderRadius: 28,
-      backgroundColor: colors.bgMuted,
-      alignItems: "center",
-      justifyContent: "center",
+    wordmark: {
+      ...labelStyle,
+      color: colors.textSecondary,
       marginBottom: spacing.md,
     },
-    heroInitial: {
-      fontSize: 22,
-      fontWeight: "600",
-      color: colors.text,
-    },
     heroTitle: {
-      fontSize: 20,
-      fontWeight: "600",
+      fontSize: 22,
+      fontWeight: "500",
       color: colors.text,
-      marginBottom: spacing.xs,
+      letterSpacing: -0.3,
+      marginBottom: spacing.sm,
     },
     heroSub: {
       fontSize: 15,
-      lineHeight: 22,
+      lineHeight: 24,
       color: colors.textSecondary,
-      textAlign: "center",
-      maxWidth: 280,
+      maxWidth: 320,
     },
     agentBlock: {
       marginBottom: spacing.lg,
@@ -232,8 +223,8 @@ function createStyles({ colors }: Theme) {
     userBubble: {
       maxWidth: "88%",
       backgroundColor: colors.chatUserBubble,
-      borderRadius: radius.xl,
-      paddingHorizontal: 18,
+      borderRadius: radius.md,
+      paddingHorizontal: 16,
       paddingVertical: 12,
     },
     userText: {
@@ -268,7 +259,7 @@ function createStyles({ colors }: Theme) {
       flexDirection: "row",
       alignItems: "flex-end",
       backgroundColor: colors.chatInputBg,
-      borderRadius: radius.pill,
+      borderRadius: radius.md,
       borderWidth: 1,
       borderColor: colors.chatInputBorder,
       paddingLeft: 4,
@@ -294,7 +285,7 @@ function createStyles({ colors }: Theme) {
     sendBtn: {
       width: 40,
       height: 40,
-      borderRadius: 20,
+      borderRadius: radius.md,
       backgroundColor: colors.buttonPrimary,
       alignItems: "center",
       justifyContent: "center",

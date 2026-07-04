@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Bot, MessageSquare } from "lucide-react";
 import type { FeedThread } from "@/lib/types";
 import { Avatar } from "./Avatar";
 import { currentUser } from "@/lib/mock-data";
-import { cn } from "@/lib/utils";
 
 type FeedThreadCardProps = {
   thread: FeedThread;
@@ -32,100 +30,54 @@ export function FeedThreadCard({ thread }: FeedThreadCardProps) {
   };
 
   return (
-    <article className="animate-fade-in rounded-2xl border border-app-border bg-app-surface shadow-sm transition-shadow hover:shadow-md">
-      <div className="p-5">
-        <div className="mb-3 flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Avatar user={thread.theirUser} />
-            <div>
-              <p className="text-sm font-medium">{thread.theirUser.name}</p>
-              <p className="text-xs text-app-text-secondary">{thread.timestamp}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5 rounded-full bg-app-surface-muted px-3 py-1 text-xs text-app-text-secondary">
-            <Bot className="h-3.5 w-3.5" />
-            {thread.yourAgent} ↔ {thread.theirAgent}
-          </div>
-        </div>
+    <article className="animate-fade-in py-8">
+      <p className="label-caps mb-3 text-app-text-secondary">
+        {thread.yourAgent} · {thread.theirAgent}
+      </p>
+      <h2 className="mb-3 text-lg font-medium leading-snug tracking-tight">{thread.title}</h2>
+      <p className="text-[15px] leading-relaxed text-app-text-secondary">{thread.summary}</p>
+      <p className="mt-2 text-xs text-app-text-tertiary">{thread.timestamp}</p>
 
-        <h2 className="mb-2 text-lg font-semibold leading-snug">{thread.title}</h2>
-        <p className="text-sm leading-relaxed text-app-text-secondary">{thread.summary}</p>
-
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-4 flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-700"
-        >
-          {expanded ? (
-            <>
-              <ChevronUp className="h-4 w-4" />
-              Hide full dialogue
-            </>
-          ) : (
-            <>
-              <ChevronDown className="h-4 w-4" />
-              View full agent dialogue ({thread.dialogue.length} messages)
-            </>
-          )}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        className="mt-5 text-sm font-medium text-app-text underline underline-offset-4"
+      >
+        {expanded ? "Hide conversation" : "Show conversation"}
+      </button>
 
       {expanded && (
-        <div className="border-t border-app-border-light bg-app-surface-subtle/50 px-5 py-4">
-          <div className="space-y-3">
-            {thread.dialogue.map((msg) => (
-              <div
-                key={msg.id}
-                className={cn(
-                  "rounded-xl px-4 py-3",
-                  msg.agentName === thread.yourAgent
-                    ? "ml-0 mr-8 bg-app-accent-soft"
-                    : "ml-8 mr-0 border border-app-border bg-app-dialogue-other"
-                )}
-              >
-                <div className="mb-1 flex items-center gap-2">
-                  <Bot className="h-3.5 w-3.5 text-app-text-tertiary" />
-                  <span className="text-xs font-medium text-app-text-secondary">{msg.agentName}</span>
-                  <span className="text-xs text-app-text-tertiary">{msg.timestamp}</span>
-                </div>
-                <p className="text-sm leading-relaxed text-app-text">{msg.content}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="border-t border-app-border-light px-5 py-4">
-        <div className="mb-3 flex items-center gap-2 text-sm font-medium text-app-text">
-          <MessageSquare className="h-4 w-4" />
-          Comments ({comments.length})
-        </div>
-
-        <div className="space-y-3">
-          {comments.map((c) => (
-            <div key={c.id} className="flex gap-3">
-              <Avatar user={c.author} size="sm" />
-              <div className="flex-1 rounded-xl bg-app-surface-muted px-3 py-2">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm font-medium">{c.author.name}</span>
-                  <span className="text-xs text-app-text-tertiary">{c.timestamp}</span>
-                </div>
-                <p className="text-sm text-app-text-secondary">{c.content}</p>
-              </div>
+        <div className="mt-6 space-y-4 border-t border-app-border pt-6">
+          {thread.dialogue.map((msg) => (
+            <div key={msg.id}>
+              <p className="label-caps mb-1 text-app-text-tertiary">{msg.agentName}</p>
+              <p className="text-[15px] leading-relaxed text-app-text">{msg.content}</p>
             </div>
           ))}
         </div>
+      )}
 
-        <form onSubmit={handleSubmitComment} className="mt-4 flex gap-2">
-          <Avatar user={currentUser} size="sm" />
-          <input
-            type="text"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Add a comment..."
-            className="flex-1 rounded-full border border-app-border bg-app-surface px-4 py-2 text-sm text-app-text outline-none focus:border-brand-400 focus:ring-2 focus:ring-app-accent-soft"
-          />
-        </form>
-      </div>
+      {comments.length > 0 && (
+        <div className="mt-6 space-y-3 border-t border-app-border pt-6">
+          {comments.map((c) => (
+            <div key={c.id}>
+              <p className="text-sm font-medium">{c.author.name}</p>
+              <p className="text-sm text-app-text-secondary">{c.content}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmitComment} className="mt-6 flex gap-2 border-t border-app-border pt-6">
+        <Avatar user={currentUser} size="sm" />
+        <input
+          type="text"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Add a note…"
+          className="flex-1 border border-app-border bg-app-surface px-4 py-2 text-sm text-app-text outline-none focus:border-app-text"
+        />
+      </form>
     </article>
   );
 }

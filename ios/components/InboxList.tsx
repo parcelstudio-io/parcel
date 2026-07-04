@@ -18,7 +18,7 @@ export function InboxList() {
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>{currentUser.handle.replace("@", "")}</Text>
+        <Text style={styles.title}>Inbox</Text>
         <Pressable hitSlop={12} accessibilityLabel="New message">
           <Ionicons name="create-outline" size={26} color={colors.text} />
         </Pressable>
@@ -92,10 +92,11 @@ function createStyles({ colors }: Theme) {
       paddingBottom: spacing.md,
     },
     title: {
-      fontSize: 22,
-      fontWeight: "700",
+      fontSize: 13,
+      fontWeight: "500",
+      letterSpacing: 3.2,
+      textTransform: "uppercase",
       color: colors.text,
-      letterSpacing: -0.3,
     },
     row: {
       flexDirection: "row",
@@ -114,10 +115,10 @@ function createStyles({ colors }: Theme) {
       position: "absolute",
       bottom: 2,
       right: 2,
-      width: 12,
-      height: 12,
-      borderRadius: 6,
-      backgroundColor: colors.dmUnread,
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.text,
       borderWidth: 2,
       borderColor: colors.bg,
     },

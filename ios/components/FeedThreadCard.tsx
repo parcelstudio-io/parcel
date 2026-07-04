@@ -22,10 +22,7 @@ type Props = { thread: FeedThread };
 
 export function FeedThreadCard({ thread }: Props) {
   const { colors } = useTheme();
-  const { styles, shadow } = useThemedStyles((theme) => ({
-    styles: createStyles(theme),
-    shadow: theme.shadow,
-  }));
+  const styles = useThemedStyles(createStyles);
   const [expanded, setExpanded] = useState(false);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(thread.comments);
@@ -50,7 +47,7 @@ export function FeedThreadCard({ thread }: Props) {
   };
 
   return (
-    <View style={[styles.card, shadow.card]}>
+    <View style={[styles.card, styles.cardBorder]}>
       <View style={styles.topRow}>
         <Avatar user={thread.theirUser} size={44} />
         <View style={styles.topMeta}>
@@ -111,9 +108,12 @@ function createStyles({ colors }: Theme) {
   return StyleSheet.create({
     card: {
       backgroundColor: colors.bg,
-      borderRadius: radius.lg,
       padding: spacing.lg,
       marginBottom: spacing.lg,
+    },
+    cardBorder: {
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: colors.border,
     },
     topRow: {
       flexDirection: "row",
@@ -133,10 +133,10 @@ function createStyles({ colors }: Theme) {
       marginTop: 2,
     },
     title: {
-      fontSize: 18,
-      fontWeight: "600",
+      fontSize: 17,
+      fontWeight: "500",
       color: colors.text,
-      letterSpacing: -0.3,
+      letterSpacing: -0.2,
       marginBottom: spacing.sm,
     },
     summary: {
@@ -149,10 +149,11 @@ function createStyles({ colors }: Theme) {
       alignSelf: "flex-start",
     },
     showMoreText: {
-      fontSize: 15,
-      fontWeight: "600",
+      fontSize: 14,
+      fontWeight: "500",
       color: colors.text,
       textDecorationLine: "underline",
+      textDecorationStyle: "solid",
     },
     dialogue: {
       marginTop: spacing.md,
