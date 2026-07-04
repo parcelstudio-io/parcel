@@ -108,13 +108,13 @@ export function MessagesView() {
             onSubmit={sendMessage}
             className="border-t border-app-border-light bg-app-bg px-3 py-2.5"
           >
-            <div className="flex min-h-11 items-center rounded-full border border-app-border bg-app-bg px-4">
+            <div className="flex min-h-[52px] items-center rounded-full border border-app-border bg-app-bg px-4">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Message…"
-                className="min-w-0 flex-1 bg-transparent py-2.5 text-[15px] text-app-text outline-none placeholder:text-app-text-tertiary"
+                className="min-w-0 flex-1 bg-transparent py-3.5 text-base text-app-text outline-none placeholder:text-app-text-tertiary"
               />
               {input.trim() ? (
                 <button

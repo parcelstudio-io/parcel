@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Mic, MicOff, Bot } from "lucide-react";
+import { Send, Mic, MicOff, Bot, Loader2 } from "lucide-react";
 import type { ChatMessage } from "@/lib/types";
-import { initialChatMessages, agentResponses } from "@/lib/mock-data";
+import { initialChatMessages } from "@/lib/mock-data";
 import { Avatar } from "./Avatar";
 import { currentUser } from "@/lib/mock-data";
 import { cn, formatTime } from "@/lib/utils";
@@ -12,8 +12,11 @@ export function ChatInterface() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialChatMessages);
   const [input, setInput] = useState("");
   const [isListening, setIsListening] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [speechSupported, setSpeechSupported] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   useEffect(() => {
@@ -45,10 +48,10 @@ export function ChatInterface() {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, isLoading]);
 
-  const sendMessage = (content: string) => {
-    if (!content.trim()) return;
+  const sendMessage = async (content: string) => {
+    if (!content.trim() || isLoading) return;
 
     const userMsg: ChatMessage = {
       id: `cm-${Date.now()}`,
@@ -56,19 +59,40 @@ export function ChatInterface() {
       content: content.trim(),
       timestamp: formatTime(),
     };
-
-    setMessages((prev) => [...prev, userMsg]);
+    const nextMessages = [...messages, userMsg];
+    setMessages(nextMessages);
     setInput("");
+    setError(null);
+    setIsLoading(true);
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/agent/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
+        }),
+      });
+      const data = (await res.json()) as { reply?: string; error?: string };
+      if (!res.ok || data.error) {
+        throw new Error(data.error ?? "Agent unavailable");
+      }
       const agentMsg: ChatMessage = {
         id: `cm-${Date.now()}-agent`,
         role: "agent",
-        content: agentResponses[Math.floor(Math.random() * agentResponses.length)],
+        content: data.reply ?? "Sorry, I couldn't respond.",
         timestamp: formatTime(),
       };
       setMessages((prev) => [...prev, agentMsg]);
-    }, 800);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Could not reach Aria. Run `pnpm setup:gemma` and ensure Ollama is running."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toggleVoice = () => {
@@ -84,15 +108,22 @@ export function ChatInterface() {
     }
   };
 
+  const scrollInputIntoView = () => {
+    setTimeout(() => {
+      inputRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
   return (
-    <div className="flex h-[calc(100vh-2rem)] flex-col rounded-2xl border border-app-border bg-app-surface shadow-sm md:h-[calc(100vh-3rem)]">
+    <div className="flex h-[calc(100dvh-5rem)] flex-col bg-app-bg md:h-[calc(100vh-3rem)] md:rounded-2xl md:border md:border-app-border">
       <div className="flex items-center gap-3 border-b border-app-border-light px-6 py-4">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-app-accent-soft">
           <Bot className="h-5 w-5 text-brand-600" />
         </div>
         <div>
           <h2 className="font-semibold">Aria</h2>
-          <p className="text-xs text-app-text-secondary">Your personal agent</p>
+          <p className="text-xs text-app-text-secondary">Powered by Gemma · your personal agent</p>
         </div>
       </div>
 
@@ -120,7 +151,7 @@ export function ChatInterface() {
                   : "bg-app-agent-bubble text-app-text"
               )}
             >
-              <p className="text-sm leading-relaxed">{msg.content}</p>
+              <p className="text-[15px] leading-relaxed">{msg.content}</p>
               <p
                 className={cn(
                   "mt-1 text-xs",
@@ -132,10 +163,19 @@ export function ChatInterface() {
             </div>
           </div>
         ))}
+        {isLoading && (
+          <div className="flex items-center gap-2 text-sm text-app-text-secondary">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Aria is thinking…
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="border-t border-app-border-light px-4 py-4">
+      <div className="border-t border-app-border-light bg-app-bg px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        {error && (
+          <p className="mb-2 text-center text-xs text-red-500">{error}</p>
+        )}
         {isListening && (
           <div className="mb-3 flex items-center justify-center gap-2 text-sm text-brand-600">
             <span className="relative flex h-3 w-3">
@@ -151,14 +191,14 @@ export function ChatInterface() {
             e.preventDefault();
             sendMessage(input);
           }}
-          className="flex items-center gap-2"
+          className="flex items-end gap-2"
         >
           {speechSupported && (
             <button
               type="button"
               onClick={toggleVoice}
               className={cn(
-                "flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors",
+                "mb-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors",
                 isListening
                   ? "bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400"
                   : "bg-app-surface-muted text-app-text-secondary hover:bg-app-border"
@@ -169,16 +209,19 @@ export function ChatInterface() {
             </button>
           )}
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Tell Aria about yourself..."
-            className="flex-1 rounded-full border border-app-border bg-app-input-bg px-4 py-2.5 text-sm text-app-text outline-none focus:border-brand-400 focus:ring-2 focus:ring-app-accent-soft"
+            onFocus={scrollInputIntoView}
+            placeholder="Message Aria…"
+            disabled={isLoading}
+            className="min-h-[52px] flex-1 rounded-full border border-app-border bg-app-input-bg px-5 py-3.5 text-base text-app-text outline-none focus:border-brand-400 focus:ring-2 focus:ring-app-accent-soft"
           />
           <button
             type="submit"
-            disabled={!input.trim()}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition-colors hover:bg-brand-700 disabled:opacity-40"
+            disabled={!input.trim() || isLoading}
+            className="mb-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white transition-colors hover:bg-brand-700 disabled:opacity-40"
             aria-label="Send message"
           >
             <Send className="h-4 w-4" />

@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   View,
   StyleSheet,
   FlatList,
   Pressable,
-  KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { Text, TextInput } from "@/components/AppText";
@@ -14,6 +13,7 @@ import type { Conversation, DirectMessage } from "@/lib/types";
 import { Avatar } from "@/components/Avatar";
 import { directMessages, currentUser } from "@/lib/mock-data";
 import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
+import { useKeyboardHeight } from "@/hooks/useKeyboardHeight";
 import { formatTime, radius, spacing, type Theme } from "@/lib/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -23,12 +23,22 @@ type ConversationViewProps = {
 
 export function ConversationView({ conversation }: ConversationViewProps) {
   const insets = useSafeAreaInsets();
+  const keyboardHeight = useKeyboardHeight();
   const { colors } = useTheme();
   const styles = useThemedStyles(createStyles);
+  const listRef = useRef<FlatList>(null);
   const [messages, setMessages] = useState<DirectMessage[]>(
     directMessages[conversation.id] || []
   );
   const [input, setInput] = useState("");
+
+  const scrollToEnd = () => {
+    setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 50);
+  };
+
+  useEffect(() => {
+    scrollToEnd();
+  }, [messages, keyboardHeight]);
 
   const sendMessage = () => {
     if (!input.trim()) return;
@@ -41,6 +51,9 @@ export function ConversationView({ conversation }: ConversationViewProps) {
     setMessages((prev) => [...prev, newMsg]);
     setInput("");
   };
+
+  const inputBottomPadding =
+    keyboardHeight > 0 ? keyboardHeight : Math.max(insets.bottom, spacing.sm);
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
@@ -64,56 +77,55 @@ export function ConversationView({ conversation }: ConversationViewProps) {
         </Pressable>
       </View>
 
-      <KeyboardAvoidingView
+      <FlatList
+        ref={listRef}
         style={styles.body}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={insets.top}
-      >
-        <FlatList
-          data={messages}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.messageList}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => {
-            const isMe = item.senderId === currentUser.id;
-            return (
-              <View style={[styles.msgRow, isMe ? styles.msgRowMe : styles.msgRowThem]}>
-                <View style={[styles.bubble, isMe ? styles.bubbleMe : styles.bubbleThem]}>
-                  <Text style={[styles.bubbleText, isMe && styles.bubbleTextMe]}>
-                    {item.content}
-                  </Text>
-                </View>
+        data={messages}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.messageList}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        renderItem={({ item }) => {
+          const isMe = item.senderId === currentUser.id;
+          return (
+            <View style={[styles.msgRow, isMe ? styles.msgRowMe : styles.msgRowThem]}>
+              <View style={[styles.bubble, isMe ? styles.bubbleMe : styles.bubbleThem]}>
+                <Text style={[styles.bubbleText, isMe && styles.bubbleTextMe]}>
+                  {item.content}
+                </Text>
               </View>
-            );
-          }}
-        />
+            </View>
+          );
+        }}
+      />
 
-        <View style={[styles.inputRow, { paddingBottom: Math.max(insets.bottom, spacing.sm) }]}>
-          <View style={styles.inputWrap}>
-            <TextInput
-              style={styles.input}
-              value={input}
-              onChangeText={setInput}
-              placeholder="Message…"
-              placeholderTextColor={colors.textTertiary}
-              onSubmitEditing={sendMessage}
-              returnKeyType="send"
-              multiline
-            />
-            {input.trim() ? (
-              <Pressable onPress={sendMessage} hitSlop={8}>
-                <Text style={styles.sendLabel}>Send</Text>
-              </Pressable>
-            ) : (
-              <View style={styles.inputIcons}>
-                <Ionicons name="camera-outline" size={22} color={colors.text} />
-                <Ionicons name="mic-outline" size={22} color={colors.text} />
-                <Ionicons name="image-outline" size={22} color={colors.text} />
-              </View>
-            )}
-          </View>
+      <View style={[styles.inputRow, { paddingBottom: inputBottomPadding }]}>
+        <View style={styles.inputWrap}>
+          <TextInput
+            style={styles.input}
+            value={input}
+            onChangeText={setInput}
+            placeholder="Message…"
+            placeholderTextColor={colors.textTertiary}
+            onSubmitEditing={sendMessage}
+            returnKeyType="send"
+            multiline
+            onFocus={scrollToEnd}
+          />
+          {input.trim() ? (
+            <Pressable onPress={sendMessage} hitSlop={8}>
+              <Text style={styles.sendLabel}>Send</Text>
+            </Pressable>
+          ) : (
+            <View style={styles.inputIcons}>
+              <Ionicons name="camera-outline" size={24} color={colors.text} />
+              <Ionicons name="mic-outline" size={24} color={colors.text} />
+              <Ionicons name="image-outline" size={24} color={colors.text} />
+            </View>
+          )}
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }
@@ -167,7 +179,7 @@ function createStyles({ colors }: Theme) {
     bubble: {
       borderRadius: 22,
       paddingHorizontal: 14,
-      paddingVertical: 9,
+      paddingVertical: 10,
     },
     bubbleMe: {
       backgroundColor: colors.dmSent,
@@ -178,8 +190,8 @@ function createStyles({ colors }: Theme) {
       borderBottomLeftRadius: 6,
     },
     bubbleText: {
-      fontSize: 16,
-      lineHeight: 21,
+      fontSize: 17,
+      lineHeight: 22,
       color: colors.text,
     },
     bubbleTextMe: { color: "#FFFFFF" },
@@ -193,7 +205,7 @@ function createStyles({ colors }: Theme) {
     inputWrap: {
       flexDirection: "row",
       alignItems: "center",
-      minHeight: 44,
+      minHeight: 52,
       borderRadius: radius.pill,
       borderWidth: 1,
       borderColor: colors.border,
@@ -203,13 +215,13 @@ function createStyles({ colors }: Theme) {
     },
     input: {
       flex: 1,
-      fontSize: 16,
+      fontSize: 17,
       color: colors.text,
-      paddingVertical: 10,
-      maxHeight: 100,
+      paddingVertical: 14,
+      maxHeight: 140,
     },
     sendLabel: {
-      fontSize: 16,
+      fontSize: 17,
       fontWeight: "600",
       color: colors.dmSent,
       paddingHorizontal: spacing.sm,

@@ -7,6 +7,7 @@
     "lint:web": "pnpm --dir webapp lint",
     "dev:ios": "pnpm --dir ios start",
     "build:android": "pnpm --dir ios exec eas build --platform android",
-    "install:all": "pnpm --dir webapp install && pnpm --dir ios install"
+    "install:all": "pnpm --dir webapp install && pnpm --dir ios install",
+    "setup:gemma": "bash scripts/setup-gemma.sh"
   }
 }

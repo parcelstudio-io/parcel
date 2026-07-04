@@ -4,33 +4,41 @@ import {
   StyleSheet,
   Pressable,
   FlatList,
-  KeyboardAvoidingView,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Text, TextInput } from "@/components/AppText";
 import { Ionicons } from "@expo/vector-icons";
 import type { ChatMessage } from "@/lib/types";
-import { initialChatMessages, agentResponses } from "@/lib/mock-data";
+import { initialChatMessages } from "@/lib/mock-data";
+import { sendAgentMessage } from "@/lib/agent";
 import { useTheme, useThemedStyles } from "@/lib/ThemeProvider";
+import { useKeyboardHeight } from "@/hooks/useKeyboardHeight";
 import { formatTime, radius, spacing, type Theme } from "@/lib/theme";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function ChatInterface() {
+  const insets = useSafeAreaInsets();
+  const keyboardHeight = useKeyboardHeight();
   const { colors, shadow } = useTheme();
   const styles = useThemedStyles(createStyles);
   const [messages, setMessages] = useState<ChatMessage[]>(initialChatMessages);
   const [input, setInput] = useState("");
   const [isListening, setIsListening] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const listRef = useRef<FlatList>(null);
 
-  useEffect(() => {
-    if (messages.length > 0) {
-      setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100);
-    }
-  }, [messages]);
+  const scrollToEnd = () => {
+    setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 50);
+  };
 
-  const sendMessage = (content: string) => {
-    if (!content.trim()) return;
+  useEffect(() => {
+    scrollToEnd();
+  }, [messages, keyboardHeight]);
+
+  const sendMessage = async (content: string) => {
+    if (!content.trim() || isLoading) return;
 
     const userMsg: ChatMessage = {
       id: `cm-${Date.now()}`,
@@ -38,18 +46,33 @@ export function ChatInterface() {
       content: content.trim(),
       timestamp: formatTime(),
     };
-    setMessages((prev) => [...prev, userMsg]);
+    const nextMessages = [...messages, userMsg];
+    setMessages(nextMessages);
     setInput("");
+    setIsLoading(true);
+    scrollToEnd();
 
-    setTimeout(() => {
+    try {
+      const reply = await sendAgentMessage(
+        nextMessages.map((m) => ({ role: m.role, content: m.content }))
+      );
       const agentMsg: ChatMessage = {
         id: `cm-${Date.now()}-agent`,
         role: "agent",
-        content: agentResponses[Math.floor(Math.random() * agentResponses.length)],
+        content: reply,
         timestamp: formatTime(),
       };
       setMessages((prev) => [...prev, agentMsg]);
-    }, 700);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Could not reach the agent.";
+      Alert.alert(
+        "Agent unavailable",
+        `${message}\n\nRun Ollama and pnpm setup:gemma, then start the web app (pnpm dev:web) or set EXPO_PUBLIC_OLLAMA_HOST to your machine IP.`
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const toggleVoice = () => {
@@ -64,18 +87,19 @@ export function ChatInterface() {
     }
   };
 
+  const inputBottomPadding =
+    keyboardHeight > 0 ? keyboardHeight : Math.max(insets.bottom, spacing.sm);
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 0}
-    >
+    <View style={styles.container}>
       <FlatList
         ref={listRef}
         data={messages}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.messageList}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
         ListHeaderComponent={
           <View style={styles.hero}>
             <View style={styles.heroOrb}>
@@ -84,6 +108,14 @@ export function ChatInterface() {
             <Text style={styles.heroTitle}>Aria</Text>
             <Text style={styles.heroSub}>Tell me about yourself — I’ll represent you thoughtfully.</Text>
           </View>
+        }
+        ListFooterComponent={
+          isLoading ? (
+            <View style={styles.typingRow}>
+              <ActivityIndicator size="small" color={colors.textSecondary} />
+              <Text style={styles.typingText}>Aria is thinking…</Text>
+            </View>
+          ) : null
         }
         renderItem={({ item }) => {
           if (item.role === "user") {
@@ -105,12 +137,12 @@ export function ChatInterface() {
 
       {isListening && <Text style={styles.listening}>Listening…</Text>}
 
-      <View style={styles.inputWrap}>
+      <View style={[styles.inputWrap, { paddingBottom: inputBottomPadding }]}>
         <View style={[styles.inputBar, shadow.input]}>
           <Pressable onPress={toggleVoice} hitSlop={8} style={styles.iconBtn}>
             <Ionicons
               name={isListening ? "mic" : "mic-outline"}
-              size={22}
+              size={24}
               color={isListening ? colors.accent : colors.textSecondary}
             />
           </Pressable>
@@ -122,19 +154,19 @@ export function ChatInterface() {
             placeholderTextColor={colors.textTertiary}
             multiline
             maxLength={2000}
-            onSubmitEditing={() => sendMessage(input)}
-            blurOnSubmit={false}
+            onFocus={scrollToEnd}
+            editable={!isLoading}
           />
           <Pressable
             onPress={() => sendMessage(input)}
-            disabled={!input.trim()}
-            style={[styles.sendBtn, !input.trim() && styles.sendBtnOff]}
+            disabled={!input.trim() || isLoading}
+            style={[styles.sendBtn, (!input.trim() || isLoading) && styles.sendBtnOff]}
           >
-            <Ionicons name="arrow-up" size={18} color={colors.buttonPrimaryIcon} />
+            <Ionicons name="arrow-up" size={20} color={colors.buttonPrimaryIcon} />
           </Pressable>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -206,6 +238,16 @@ function createStyles({ colors }: Theme) {
       lineHeight: 24,
       color: colors.text,
     },
+    typingRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.sm,
+      paddingVertical: spacing.sm,
+    },
+    typingText: {
+      fontSize: 14,
+      color: colors.textSecondary,
+    },
     listening: {
       textAlign: "center",
       color: colors.textSecondary,
@@ -215,7 +257,6 @@ function createStyles({ colors }: Theme) {
     inputWrap: {
       paddingHorizontal: spacing.md,
       paddingTop: spacing.sm,
-      paddingBottom: spacing.md,
       backgroundColor: colors.chatBg,
       borderTopWidth: StyleSheet.hairlineWidth,
       borderTopColor: colors.borderLight,
@@ -228,29 +269,29 @@ function createStyles({ colors }: Theme) {
       borderWidth: 1,
       borderColor: colors.chatInputBorder,
       paddingLeft: 4,
-      paddingRight: 4,
-      paddingVertical: 4,
-      minHeight: 48,
+      paddingRight: 6,
+      paddingVertical: 6,
+      minHeight: 56,
     },
     iconBtn: {
-      width: 40,
-      height: 40,
+      width: 44,
+      height: 44,
       alignItems: "center",
       justifyContent: "center",
     },
     input: {
       flex: 1,
-      fontSize: 16,
-      lineHeight: 22,
+      fontSize: 17,
+      lineHeight: 24,
       color: colors.text,
-      maxHeight: 120,
-      paddingVertical: 10,
-      paddingHorizontal: 4,
+      maxHeight: 160,
+      paddingVertical: 12,
+      paddingHorizontal: 6,
     },
     sendBtn: {
-      width: 36,
-      height: 36,
-      borderRadius: 18,
+      width: 40,
+      height: 40,
+      borderRadius: 20,
       backgroundColor: colors.buttonPrimary,
       alignItems: "center",
       justifyContent: "center",
