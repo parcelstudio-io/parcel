@@ -1,13 +1,13 @@
 import { StyleSheet, View } from "react-native";
-import { MessagesView } from "@/components/MessagesView";
+import { InboxList } from "@/components/InboxList";
 import { useTheme } from "@/lib/ThemeProvider";
 
-export default function MessagesScreen() {
+export default function InboxScreen() {
   const { colors } = useTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      <MessagesView />
+      <InboxList />
     </View>
   );
 }
