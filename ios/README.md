@@ -46,22 +46,18 @@ This comes from **Expo’s cloud API**, not your app code. Common causes:
 
 #### `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` (supply-chain policy)
 
-pnpm 10+ may block packages published within the last ~24 hours. This repo includes `ios/.npmrc` with `minimum-release-age=0` to allow install.
+pnpm 10+ blocks packages published within ~24 hours. The lockfile pins `@react-navigation/*` to **June 30 versions** so install passes strict policies.
 
-After `git pull`, try:
+After `git pull`, run:
 
 ```bash
 cd parcel/ios
+rm -rf node_modules
 pnpm install
+pnpm start:go
 ```
 
-If it still fails (global pnpm config overrides the project), use either:
-
-```bash
-pnpm install --config.minimum-release-age=0
-```
-
-or install with npm instead:
+If it **still** fails, your global pnpm config may override the project. Use npm instead:
 
 ```bash
 npm install
